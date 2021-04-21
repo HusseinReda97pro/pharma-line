@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/models/history.dart';
@@ -41,4 +43,6 @@ mixin UserModel on ChangeNotifier {
             progressPercentage: 100),
         amount: 5)
   ];
+
+  Future<void> signUp(User user, String password, File image) async {}
 }

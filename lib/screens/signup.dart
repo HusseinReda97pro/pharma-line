@@ -2,9 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
+import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/controllers/university_controller.dart';
+import 'package:pharma_line/models/faculty.dart';
+import 'package:pharma_line/models/university.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/widgets/input.dart';
 import 'package:pharma_line/widgets/profile_image_picker.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -15,14 +20,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   File _image;
+  University selectedUniversity;
+  Faculty selectedFaculty;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
+    return GestureDetector(onTap: () {
+      FocusScope.of(context).requestFocus(FocusNode());
+    }, child: Consumer<MainModel>(
+        builder: (BuildContext context, MainModel model, Widget child) {
+      return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.darkBlue,
@@ -76,10 +83,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5.0),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
+                    child: DropdownButton<University>(
                       //value: 'Helwan University',
                       hint: Text(
-                        'University',
+                        selectedUniversity == null
+                            ? 'University'
+                            : selectedUniversity.name,
                         style: TextStyle(color: Palette.lightBlue),
                       ),
                       iconSize: 32.0,
@@ -87,55 +96,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       isExpanded: true,
                       style: TextStyle(color: Palette.lightBlue),
                       dropdownColor: Palette.midBlue,
-                      items: <String>[
-                        'Helwan University',
-                        'Cairo University',
-                        'Alex University'
-                      ].map((String value) {
-                        return new DropdownMenuItem<String>(
-                          value: value,
-                          child: new Text(value),
+                      items: model.universities.map((University university) {
+                        return new DropdownMenuItem<University>(
+                          value: university,
+                          child: new Text(university.name),
                         );
                       }).toList(),
-                      onChanged: (_) {},
+                      onChanged: (university) {
+                        print(university);
+                        setState(() {
+                          selectedUniversity = university;
+                        });
+                      },
                     ),
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: MediaQuery.of(context).size.width * 0.05),
-                color: Palette.midBlue,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      //value: 'Helwan University',
-                      hint: Text(
-                        'Faculty',
-                        style: TextStyle(color: Palette.lightBlue),
+              !(selectedUniversity?.faculties != null)
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: MediaQuery.of(context).size.width * 0.05),
+                      color: Palette.midBlue,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<Faculty>(
+                            //value: 'Helwan University',
+                            hint: Text(
+                              selectedFaculty == null
+                                  ? 'Faculty'
+                                  : selectedFaculty.name,
+                              style: TextStyle(color: Palette.lightBlue),
+                            ),
+                            iconSize: 32.0,
+                            iconEnabledColor: Palette.lightBlue,
+                            isExpanded: true,
+                            style: TextStyle(color: Palette.lightBlue),
+                            dropdownColor: Palette.midBlue,
+                            items: selectedUniversity.faculties
+                                .map((Faculty faculty) {
+                              return new DropdownMenuItem<Faculty>(
+                                value: faculty,
+                                child: new Text(faculty.name),
+                              );
+                            }).toList(),
+                            onChanged: (faculty) {
+                              setState(() {
+                                selectedFaculty = faculty;
+                              });
+                            },
+                          ),
+                        ),
                       ),
-                      iconSize: 32.0,
-                      iconEnabledColor: Palette.lightBlue,
-                      isExpanded: true,
-                      style: TextStyle(color: Palette.lightBlue),
-                      dropdownColor: Palette.midBlue,
-                      items: <String>[
-                        'Faculty of computer science',
-                        'Faculty of computer science',
-                        'Faculty of computer science'
-                      ].map((String value) {
-                        return new DropdownMenuItem<String>(
-                          value: value,
-                          child: new Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
                     ),
-                  ),
-                ),
-              ),
               SizedBox(
                 height: 5.0,
               ),
@@ -153,6 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   onPressed: () {
                     //TODO signup
+                    UniversityController().getUniversities();
                   },
                   child: Text(
                     'Sign up',
@@ -163,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    }));
   }
 }
