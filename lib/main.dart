@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   static final MainModel mainModel = MainModel();
   @override
   Widget build(BuildContext context) {
+    mainModel.autoLogin();
     return ChangeNotifierProvider(
       create: (context) => mainModel,
       child: MaterialApp(

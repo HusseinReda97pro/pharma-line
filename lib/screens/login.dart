@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/signup.dart';
 import 'package:pharma_line/widgets/input.dart';
+import 'package:pharma_line/widgets/loading_box.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +16,46 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  Future<void> _showErrors(BuildContext context, List<String> errors) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0.0,
+          content: Container(
+            width: 100,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: errors.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(errors[index]));
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      return Palette.midBlue;
+                    },
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'okay',
+                  textAlign: TextAlign.center,
+                ))
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Consumer<MainModel>(
         builder: (BuildContext context, MainModel model, Widget child) {
           return Scaffold(
+            resizeToAvoidBottomInset: true,
             body: Center(
               child: ListView(
                 shrinkWrap: true,
@@ -45,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Input(
                     hint: 'password',
                     controller: passwordController,
+                    obscureText: true,
                   ),
                   SizedBox(
                     height: 5.0,
@@ -62,8 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
-                      onPressed: () {
-                        //TODO login
+                      onPressed: () async {
+                        loadingBox(context);
+                        var res = await model.login(
+                            email: emailController.text.trim(),
+                            password: passwordController.text);
+                        Navigator.pop(context);
+                        if (res != null) {
+                          _showErrors(context, res['errors']);
+                        } else {
+                          Navigator.pushReplacementNamed(
+                              context, HomeScreen.route);
+                        }
                       },
                       child: Text(
                         'Login',

@@ -4,7 +4,11 @@ import 'package:pharma_line/config/Palette.dart';
 class Input extends StatefulWidget {
   final String hint;
   final TextEditingController controller;
-  Input({@required this.hint, @required this.controller});
+  final bool obscureText;
+  Input(
+      {@required this.hint,
+      @required this.controller,
+      this.obscureText = false});
   @override
   _InputState createState() => _InputState();
 }
@@ -17,6 +21,8 @@ class _InputState extends State<Input> {
           vertical: 5.0, horizontal: MediaQuery.of(context).size.width * 0.05),
       child: TextField(
         controller: widget.controller,
+        obscureText: widget.obscureText,
+        style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           filled: true,
           fillColor: Palette.midBlue,

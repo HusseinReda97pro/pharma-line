@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               margin: EdgeInsets.all(10.0),
               child: Text(
-                model.currentUser.userName,
+                model.currentUser.firstName + ' ' + model.currentUser.lastName,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Palette.lightBlue, fontSize: 18.0),
               ),

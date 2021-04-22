@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
-import 'package:pharma_line/controllers/university_controller.dart';
 import 'package:pharma_line/models/faculty.dart';
 import 'package:pharma_line/models/university.dart';
+import 'package:pharma_line/models/user.dart';
+import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/widgets/input.dart';
-import 'package:pharma_line/widgets/profile_image_picker.dart';
+import 'package:pharma_line/widgets/loading_box.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -18,10 +20,106 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  File _image;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  File image;
   University selectedUniversity;
   Faculty selectedFaculty;
+  final picker = ImagePicker();
+
+  Future<void> _showErrors(BuildContext context, List<String> errors) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0.0,
+          content: Container(
+            width: 100,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: errors.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(errors[index]));
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      return Palette.midBlue;
+                    },
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'okay',
+                  textAlign: TextAlign.center,
+                ))
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _signedUpSuccessfully(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0.0,
+          content: Container(
+            width: 100,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Text('Signed Up Successfully'),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      return Palette.midBlue;
+                    },
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, HomeScreen.route);
+                },
+                child: Text(
+                  'okay',
+                  textAlign: TextAlign.center,
+                ))
+          ],
+        );
+      },
+    );
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }, child: Consumer<MainModel>(
         builder: (BuildContext context, MainModel model, Widget child) {
       return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.darkBlue,
@@ -60,20 +159,96 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
-        body: Center(
+        body: Container(
           child: ListView(
             shrinkWrap: true,
             children: [
-              ProfileImagePicker(
-                image: _image,
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  children: [
+                    Expanded(child: SizedBox()),
+                    Container(
+                      width: 150.0,
+                      height: 150,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 150.0,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(75),
+                              border: Border.all(
+                                  color: Palette.lightBlue, width: 3.0),
+                            ),
+                            child: ClipOval(
+                              child: image != null
+                                  ? Image.file(
+                                      image,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/profile_picture_placeholder.jpg',
+                                    ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: -5,
+                            right: -10,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    return Palette
+                                        .darkBlue; // Use the component's default.
+                                  },
+                                ),
+                                shape: MaterialStateProperty.all<CircleBorder>(
+                                  CircleBorder(
+                                    side: BorderSide(color: Palette.lightBlue),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                getImage();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5.0),
+                                child: Icon(
+                                  Icons.add_a_photo,
+                                  color: Palette.lightBlue,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                  ],
+                ),
               ),
               Input(
-                hint: 'Name',
-                controller: nameController,
+                hint: 'First Name',
+                controller: firstNameController,
+              ),
+              Input(
+                hint: 'Last Name',
+                controller: lastNameController,
               ),
               Input(
                 hint: 'E-mail',
                 controller: emailController,
+              ),
+              Input(
+                hint: 'Phone Number',
+                controller: phoneNumberController,
+              ),
+              Input(
+                hint: 'Password',
+                controller: passwordController,
+                obscureText: true,
               ),
               Container(
                 margin: EdgeInsets.symmetric(
@@ -166,9 +341,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     //TODO signup
-                    UniversityController().getUniversities();
+                    if (emailController.text.isNotEmpty &&
+                        firstNameController.text.isNotEmpty &&
+                        lastNameController.text.isNotEmpty &&
+                        phoneNumberController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty &&
+                        selectedFaculty != null &&
+                        image != null) {
+                      loadingBox(context);
+                      User user = User(
+                          email: emailController.text.trim(),
+                          facultyId: selectedFaculty.id,
+                          firstName: firstNameController.text.trim(),
+                          lastName: lastNameController.text.trim(),
+                          phoneNumber: phoneNumberController.text.trim());
+                      var res = await model.signUp(
+                          user: user,
+                          password: passwordController.text,
+                          image: image);
+                      Navigator.pop(context);
+                      if (res != null) {
+                        _showErrors(context, res['errors']);
+                      } else {
+                        _signedUpSuccessfully(context);
+                      }
+                    }
                   },
                   child: Text(
                     'Sign up',

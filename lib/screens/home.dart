@@ -7,6 +7,7 @@ import 'package:pharma_line/widgets/course_card.dart';
 import 'file:///D:/MobileDevelopment/pharma_line/lib/widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const route = '/';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

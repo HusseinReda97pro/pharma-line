@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
+import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/profile.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   Widget _listTile(
@@ -27,38 +29,52 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      elevation: 0,
-      child: Container(
-        color: Palette.darkBlue,
-        child: ListView(
-          children: [
-            DrawerHeader(
-              padding: EdgeInsets.zero,
-              child: Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.contain,
-              ),
+    return Consumer<MainModel>(
+      builder: (BuildContext context, MainModel model, Widget child) {
+        return Drawer(
+          elevation: 0,
+          child: Container(
+            color: Palette.darkBlue,
+            child: ListView(
+              children: [
+                DrawerHeader(
+                  padding: EdgeInsets.zero,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                model.currentUser == null
+                    ? _listTile(
+                        context: context,
+                        title: 'Login',
+                        icon: Icons.person,
+                        onPressed: () {
+                          Navigator.pushNamed(context, LoginScreen.route);
+                        },
+                      )
+                    : _listTile(
+                        context: context,
+                        title: 'Logout',
+                        icon: Icons.logout,
+                        onPressed: () {
+                          model.logout();
+                          Navigator.pop(context);
+                        },
+                      ),
+                _listTile(
+                  context: context,
+                  title: 'Profile',
+                  icon: Icons.person,
+                  onPressed: () {
+                    Navigator.pushNamed(context, ProfileScreen.route);
+                  },
+                ),
+              ],
             ),
-            _listTile(
-              context: context,
-              title: 'Login',
-              icon: Icons.person,
-              onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.route);
-              },
-            ),
-            _listTile(
-              context: context,
-              title: 'Profile',
-              icon: Icons.person,
-              onPressed: () {
-                Navigator.pushNamed(context, ProfileScreen.route);
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
