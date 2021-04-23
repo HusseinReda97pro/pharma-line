@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/login.dart';
+import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/profile.dart';
 import 'package:provider/provider.dart';
 
@@ -62,14 +63,27 @@ class AppDrawer extends StatelessWidget {
                           Navigator.pop(context);
                         },
                       ),
-                _listTile(
-                  context: context,
-                  title: 'Profile',
-                  icon: Icons.person,
-                  onPressed: () {
-                    Navigator.pushNamed(context, ProfileScreen.route);
-                  },
-                ),
+                model.currentUser != null
+                    ? _listTile(
+                        context: context,
+                        title: 'My Courses',
+                        icon: Icons.book,
+                        onPressed: () {
+                          model.getMyCourses(token: model.currentUser.token);
+                          Navigator.pushNamed(context, MyCoursesScreen.route);
+                        },
+                      )
+                    : Container(),
+                model.currentUser == null
+                    ? Container()
+                    : _listTile(
+                        context: context,
+                        title: 'Profile',
+                        icon: Icons.person,
+                        onPressed: () {
+                          Navigator.pushNamed(context, ProfileScreen.route);
+                        },
+                      ),
               ],
             ),
           ),

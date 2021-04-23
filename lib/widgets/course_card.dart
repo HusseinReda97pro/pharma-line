@@ -32,10 +32,11 @@ class CourseCard extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   course.university +
-                      ' Uni, ' +
+                      (course.university.isEmpty ? '' : ' Uni, ') +
                       course.faculty +
-                      ' Faculty, DR, ' +
-                      course.doctorName +
+                      (course.faculty.isEmpty ? '' : ' Faculty,') +
+                      ' DR, ' +
+                      course.teacher +
                       '.',
                   style: TextStyle(color: Palette.lightBlue, fontSize: 12.0),
                 ),
@@ -64,7 +65,7 @@ class CourseCard extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      course.category,
+                      course.label,
                       style: TextStyle(
                           color: Palette.lightBlue,
                           fontSize: 12.0,
@@ -86,7 +87,7 @@ class CourseCard extends StatelessWidget {
                             'Live',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12.0,
+                                fontSize: 8.0,
                                 fontWeight: FontWeight.w700),
                           ),
                         )

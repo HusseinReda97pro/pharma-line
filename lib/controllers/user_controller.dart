@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io' as io;
 
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:pharma_line/config/basic_config.dart';
+import 'package:pharma_line/models/history.dart';
+import 'package:pharma_line/models/history_status.dart';
 import 'package:pharma_line/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,11 +26,29 @@ class UserController {
     request.fields['deviceId'] = deviceId;
     request.fields['faculty'] = user.facultyId;
 
-    request.files.add(new http.MultipartFile.fromBytes(
-      'profilePicture',
-      await image.readAsBytes(),
-    ));
+    // request.files.add(new http.MultipartFile.fromBytes(
+    //   'profilePicture',
+    //   await image.readAsBytes(),
+    // ));
+    // open a bytestream
+    var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
+    // get file length
+    var length = await image.length();
+
+    // multipart that takes file
+    var multipartFile = new http.MultipartFile('profilePicture', stream, length,
+        filename: basename(image.path));
+
+    // add file to multipart
+    request.files.add(multipartFile);
+
+    print(request.fields);
+    print(request.files);
+
     try {
+      // return {
+      //   'errors': ['something went wrong']
+      // };
       var response = await request.send();
       final res = await http.Response.fromStream(response);
       print(res.body);
@@ -51,8 +73,13 @@ class UserController {
 
   Future<dynamic> login(String email, String password) async {
     String deviceId = await DeviceToken.getId();
+    print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
-    var data = {'email': email, 'password': password, 'deviceId': deviceId};
+    var data = {
+      'email': email,
+      'password': password,
+      'deviceId': '85b4eb344ee3b1f4' //TODO edit deviceid
+    };
 
     try {
       http.Response response = await http.post(postUri, body: data);
@@ -132,5 +159,41 @@ class UserController {
     prefs.remove('facultyId');
     prefs.remove('points');
     prefs.remove('balance');
+  }
+
+  Future<List<History>> getHistory(token) async {
+    List<History> Histories = [];
+    HistoryStatus userstatus;
+    Uri url = Uri.parse(BASIC_URL + '/api/v1/student/myHistory');
+    http.Response response = await http
+        .get(url, headers: {io.HttpHeaders.authorizationHeader: token});
+    var data = json.decode(response.body);
+    print(data);
+
+    try {
+      for (var hist in data) {
+        //enum HistoryStatus { SPEND, COMPLETE, RECHARGE }
+        //   transactionType:  String, enum: ["Add", "Course", "Lesson"],
+        //course it will be the lesson id of the course then in the page request the details by lesson id
+        if (hist['transactionType'] == 'Add') {
+          userstatus = HistoryStatus.RECHARGE;
+        } else if (hist['transactionType'] == 'Course') {
+          userstatus = HistoryStatus.COMPLETE;
+        } else {
+          userstatus = HistoryStatus.SPEND;
+        }
+        Histories.add(
+          History(
+              amount: hist['transactionAmout'],
+              status: userstatus,
+              lessonName: 'test'
+              // hist['productId']
+              ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+    return Histories;
   }
 }

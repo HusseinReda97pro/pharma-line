@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/notifications.dart';
 import 'package:pharma_line/screens/schedule.dart';
 import 'package:pharma_line/screens/user_info.dart';
@@ -112,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: FontAwesomeIcons.wallet,
                       title: 'wallet',
                       onPressed: () {
+                        model.getHistory();
                         Navigator.pushNamed(context, WalletScreen.route);
                       }),
                   _card(
@@ -126,7 +128,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () {
                         Navigator.pushNamed(context, NotificationsScreen.route);
                       }),
-                  _card(icon: Icons.cancel, title: 'logout', onPressed: () {}),
+                  _card(
+                      icon: Icons.cancel,
+                      title: 'logout',
+                      onPressed: () {
+                        model.logout();
+                        Navigator.pushReplacementNamed(
+                            context, HomeScreen.route);
+                      }),
                 ],
               ),
             ),

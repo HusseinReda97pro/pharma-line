@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/user_controller.dart';
-import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/models/history.dart';
-import 'package:pharma_line/models/history_status.dart';
 import 'package:pharma_line/models/user.dart';
 
 mixin UserModel on ChangeNotifier {
@@ -17,35 +15,36 @@ mixin UserModel on ChangeNotifier {
   //         'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
   //     points: 150);
   UserController userController = UserController();
-  List<History> history = [
-    History(
-        status: HistoryStatus.SPEND,
-        course: Course(
-            category: 'Physics',
-            doctorName: 'Ahmed Youssef',
-            faculty: 'Science',
-            isLive: false,
-            university: 'Helwan',
-            title: 'chemistry fundamentals',
-            imageUrl:
-                'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
-            progressPercentage: 20),
-        amount: 5),
-    History(status: HistoryStatus.RECHARGE, amount: 20),
-    History(
-        status: HistoryStatus.COMPLETE,
-        course: Course(
-            category: 'Math',
-            doctorName: 'Ahmed Youssef',
-            faculty: 'Science',
-            isLive: false,
-            university: 'Helwan',
-            title: 'chemistry fundamentals',
-            imageUrl:
-                'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
-            progressPercentage: 100),
-        amount: 5)
-  ];
+  List<History> history = [];
+  // = [
+  //   History(
+  //       status: HistoryStatus.SPEND,
+  //       course: Course(
+  //           label: 'Physics',
+  //           teacher: 'Ahmed Youssef',
+  //           faculty: 'Science',
+  //           isLive: false,
+  //           university: 'Helwan',
+  //           title: 'chemistry fundamentals',
+  //           imageUrl:
+  //               'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
+  //           progressPercentage: 20),
+  //       amount: 5),
+  //   History(status: HistoryStatus.RECHARGE, amount: 20),
+  //   History(
+  //       status: HistoryStatus.COMPLETE,
+  //       course: Course(
+  //           label: 'Math',
+  //           teacher: 'Ahmed Youssef',
+  //           faculty: 'Science',
+  //           isLive: false,
+  //           university: 'Helwan',
+  //           title: 'chemistry fundamentals',
+  //           imageUrl:
+  //               'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
+  //           progressPercentage: 100),
+  //       amount: 5)
+  // ];
 
   Future<dynamic> signUp({User user, String password, File image}) async {
     var res = await userController.signUp(user, password, image);
@@ -65,7 +64,7 @@ mixin UserModel on ChangeNotifier {
       balance: signedUpUser['balance'].toString(),
       deviceId: signedUpUser['deviceId'],
       facultyId: signedUpUser['faculty'],
-      profileImageUrl: null,
+      profileImageUrl: signedUpUser['profilePicture'],
     );
     userController.storeUser(currentUser);
   }
@@ -88,7 +87,7 @@ mixin UserModel on ChangeNotifier {
       balance: signedUpUser['balance'].toString(),
       deviceId: signedUpUser['deviceId'],
       facultyId: signedUpUser['faculty'],
-      profileImageUrl: null,
+      profileImageUrl: signedUpUser['profilePicture'],
     );
     userController.storeUser(currentUser);
   }
@@ -100,5 +99,14 @@ mixin UserModel on ChangeNotifier {
 
   Future<void> autoLogin() async {
     currentUser = await userController.getStoredUser();
+  }
+
+  bool loadingHistory = false;
+  Future<void> getHistory() async {
+    loadingHistory = true;
+    notifyListeners();
+    history = await userController.getHistory(currentUser.token);
+    loadingHistory = false;
+    notifyListeners();
   }
 }

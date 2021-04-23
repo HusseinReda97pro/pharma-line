@@ -3,6 +3,7 @@ import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
+import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/notifications.dart';
 import 'package:pharma_line/screens/profile.dart';
 import 'package:pharma_line/screens/schedule.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     mainModel.autoLogin();
+    mainModel.getCourses();
     return ChangeNotifierProvider(
       create: (context) => mainModel,
       child: MaterialApp(
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
           NotificationsScreen.route: (BuildContext context) =>
               NotificationsScreen(),
           ScheduleScreen.route: (BuildContext context) => ScheduleScreen(),
+          MyCoursesScreen.route: (BuildContext context) => MyCoursesScreen(),
         },
       ),
     );

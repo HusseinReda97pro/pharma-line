@@ -16,8 +16,8 @@ class _SearchScreenState extends State<SearchScreen> {
   //TODO Edit courses list
   List<Course> courses = [
     Course(
-        category: 'Physics',
-        doctorName: 'Ahmed Youssef',
+        label: 'Physics',
+        teacher: 'Ahmed Youssef',
         faculty: 'Science',
         isLive: false,
         university: 'Helwan',
@@ -26,8 +26,8 @@ class _SearchScreenState extends State<SearchScreen> {
             'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
         progressPercentage: 20),
     Course(
-        category: 'Math',
-        doctorName: 'Ahmed Youssef',
+        label: 'Math',
+        teacher: 'Ahmed Youssef',
         faculty: 'Science',
         isLive: false,
         university: 'Helwan',

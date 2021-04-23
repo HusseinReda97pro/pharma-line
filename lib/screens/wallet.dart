@@ -22,55 +22,65 @@ class _WalletScreenState extends State<WalletScreen> {
             context: context,
           ),
           drawer: AppDrawer(),
-          body: ListView.builder(
-              itemCount: model.history.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.of(context).size.width * 0.05),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Wallet',
-                              style: TextStyle(
-                                  color: Palette.lightBlue,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold),
+          body: model.loadingHistory
+              ? Center(
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: model.history.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.05),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Wallet',
+                                  style: TextStyle(
+                                      color: Palette.lightBlue,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: SizedBox(),
+                                ),
+                                Text(
+                                  'Balance: ' +
+                                      model.currentUser.balance +
+                                      ' EGP',
+                                  style: TextStyle(
+                                      color: Palette.lightBlue, fontSize: 16.0),
+                                )
+                              ],
                             ),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            Text(
-                              'Balance: 25\$',
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.05,
+                                vertical: 10.0),
+                            child: Text(
+                              'history:',
                               style: TextStyle(
-                                  color: Palette.lightBlue, fontSize: 16.0),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.of(context).size.width * 0.05,
-                            vertical: 10.0),
-                        child: Text(
-                          'history:',
-                          style: TextStyle(
-                              color: Palette.lightBlue, fontSize: 14.0),
-                        ),
-                      )
-                    ],
-                  );
-                }
-                return HistoryCard(
-                  history: model.history[index - 1],
-                );
-              }),
+                                  color: Palette.lightBlue, fontSize: 14.0),
+                            ),
+                          )
+                        ],
+                      );
+                    }
+                    return HistoryCard(
+                      history: model.history[index - 1],
+                    );
+                  }),
         );
       },
     );

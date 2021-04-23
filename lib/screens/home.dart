@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
-import 'package:pharma_line/models/course.dart';
+import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/course_card.dart';
+import 'package:provider/provider.dart';
 
 import 'file:///D:/MobileDevelopment/pharma_line/lib/widgets/app_drawer.dart';
 
@@ -13,89 +14,86 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //TODO Edit courses list
-  List<Course> courses = [
-    Course(
-        category: 'Physics',
-        doctorName: 'Ahmed Youssef',
-        faculty: 'Science',
-        isLive: true,
-        university: 'Helwan',
-        title: 'chemistry fundamentals',
-        imageUrl:
-            'https://codata.org/wp-content/uploads/2020/10/if_open-science.png'),
-    Course(
-        category: 'Physics',
-        doctorName: 'Ahmed Youssef',
-        faculty: 'Science',
-        isLive: false,
-        university: 'Helwan',
-        title: 'chemistry fundamentals',
-        imageUrl:
-            'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
-        progressPercentage: 20),
-    Course(
-        category: 'Math',
-        doctorName: 'Ahmed Youssef',
-        faculty: 'Science',
-        isLive: false,
-        university: 'Helwan',
-        title: 'chemistry fundamentals',
-        imageUrl:
-            'https://codata.org/wp-content/uploads/2020/10/if_open-science.png',
-        progressPercentage: 100),
-  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MainAppBar(
-        context: context,
-      ),
-      drawer: AppDrawer(),
-      body: ListView.builder(
-        itemCount: courses.length + 2,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == 0) {
-            return Container(
-              margin: EdgeInsets.all(25.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Hi  ',
-                        style:
-                            TextStyle(color: Palette.lightBlue, fontSize: 22.0),
-                      ),
-                      Text(
-                        'Abdo!',
-                        style: TextStyle(
-                            color: Palette.lightBlue,
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
+    return Consumer<MainModel>(
+        builder: (BuildContext context, MainModel model, Widget child) {
+      return Scaffold(
+        appBar: MainAppBar(
+          context: context,
+        ),
+        drawer: AppDrawer(),
+        body: model.loadingCourses
+            ? Center(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : model.currentCourses.length == 0
+                ? Center(
+                    child: Text(
+                      'there is no courses yet.',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: model.getCourses,
+                    child: ListView.builder(
+                      itemCount: model.currentCourses.length + 2,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return model.currentUser == null
+                              ? Container()
+                              : Container(
+                                  margin: EdgeInsets.all(25.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Hi  ',
+                                            style: TextStyle(
+                                                color: Palette.lightBlue,
+                                                fontSize: 22.0),
+                                          ),
+                                          Text(
+                                            model.currentUser.firstName +
+                                                ' ' +
+                                                model.currentUser.lastName +
+                                                '!',
+                                            style: TextStyle(
+                                                color: Palette.lightBlue,
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                        'Ready to learn?',
+                                        style: TextStyle(
+                                            color: Palette.lightBlue,
+                                            fontSize: 22.0),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                        }
+                        if (index == model.currentCourses.length + 1) {
+                          return SizedBox(
+                            height: 100,
+                          );
+                        }
+                        return CourseCard(
+                          course: model.currentCourses[index - 1],
+                        );
+                      },
+                    ),
                   ),
-                  Text(
-                    'Ready to learn?',
-                    style: TextStyle(color: Palette.lightBlue, fontSize: 22.0),
-                  ),
-                ],
-              ),
-            );
-          }
-          if (index == courses.length + 1) {
-            return SizedBox(
-              height: 100,
-            );
-          }
-
-          return CourseCard(
-            course: courses[index - 1],
-          );
-        },
-      ),
-    );
+      );
+    });
   }
 }
