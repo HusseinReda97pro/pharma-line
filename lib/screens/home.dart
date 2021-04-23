@@ -5,7 +5,7 @@ import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/course_card.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///D:/MobileDevelopment/pharma_line/lib/widgets/app_drawer.dart';
+import 'package:pharma_line/widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   static const route = '/';

@@ -115,6 +115,7 @@ class UserController {
     prefs.setString('facultyId', user.facultyId);
     prefs.setInt('points', user.points);
     prefs.setString('balance', user.balance);
+    prefs.setString("profilePicture", user.profileImageUrl);
   }
 
   Future<User> getStoredUser() async {
@@ -132,11 +133,12 @@ class UserController {
     var facultyId = prefs.get('facultyId');
     var points = prefs.get('points');
     var balance = prefs.get('balance');
+    var imageUrl = prefs.get("profilePicture");
     User user = User(
         firstName: firstName,
         lastName: lastName,
         email: email,
-        profileImageUrl: null,
+        profileImageUrl: imageUrl,
         facultyId: facultyId,
         phoneNumber: phoneNumber,
         points: points,

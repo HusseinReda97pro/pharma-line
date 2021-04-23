@@ -4,7 +4,7 @@ import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/course_card.dart';
 
-import 'file:///D:/MobileDevelopment/pharma_line/lib/widgets/app_drawer.dart';
+import 'package:pharma_line/widgets/app_drawer.dart';
 
 class SearchScreen extends StatefulWidget {
   static final String route = '/search';

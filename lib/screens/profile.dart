@@ -23,6 +23,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   File _image;
+
+final imageurl = "";
   Widget _card(
       {@required IconData icon,
       @required String title,
@@ -66,8 +68,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<MainModel>(
         builder: (BuildContext context, MainModel model, Widget child) {
+
+//          ImageProvider image = NetworkImage(
+//              model.currentUser.profileImageUrl,
+//              headers: {"Authorization":  model.currentUser.token});
+
+
+//import 'package:http/http.dart' as http;
+//final response = await http.get(
+//    Uri.parse('https://pharmaline.herokuapp.com/api/v1/student/profilePicture'),
+//    headers: {HttpHeaders.authorizationHeader: model.currentUser.token},
+//  );
+
       return Scaffold(
         appBar: MainAppBar(
           context: context,
@@ -75,8 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         drawer: AppDrawer(),
         body: ListView(
           children: [
+
             ProfileImagePicker(
-                image: _image, imageUrl: model.currentUser.profileImageUrl),
+                image: _image, imageUrl: model.currentUser.profileImageUrl , model: model),
             Container(
               margin: EdgeInsets.all(10.0),
               child: Text(

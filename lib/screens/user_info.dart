@@ -37,7 +37,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           body: ListView(
             children: [
               ProfileImagePicker(
-                  image: _image, imageUrl: model.currentUser.profileImageUrl),
+                  image: _image, imageUrl: model.currentUser.profileImageUrl , model: model,),
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: Text(

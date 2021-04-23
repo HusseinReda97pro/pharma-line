@@ -3,12 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pharma_line/config/Palette.dart';
+import 'package:pharma_line/controllers/state_management/main_model.dart';
+
+
 
 //ignore: must_be_immutable
 class ProfileImagePicker extends StatefulWidget {
   File image;
   final String imageUrl;
-  ProfileImagePicker({this.image, this.imageUrl});
+  MainModel model;
+  ProfileImagePicker({this.image, this.imageUrl, this.model});
 
   @override
   _ProfileImagePickerState createState() => _ProfileImagePickerState();
@@ -31,6 +35,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
 
   @override
   Widget build(BuildContext context) {
+   // print(widget.imageUrl);
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
       child: Row(
@@ -56,9 +61,8 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
                           )
                         : widget.imageUrl != null
                             ? Image.network(
-                                widget.imageUrl,
-                                fit: BoxFit.cover,
-                              )
+                        "https://pharmaline.herokuapp.com/api/v1/student/profilePicture",
+                      headers: {"Authorization":  widget.model.currentUser.token})
                             : Image.asset(
                                 'assets/images/profile_picture_placeholder.jpg',
                               ),

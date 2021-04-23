@@ -5,3 +5,4 @@ class Faculty {
   final String name;
   Faculty({@required this.id, @required this.name});
 }
+
