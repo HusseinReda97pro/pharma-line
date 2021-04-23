@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:pharma_line/config/basic_config.dart';
-import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/models/lesson.dart';
 
 class LessonController {
@@ -43,6 +42,6 @@ class LessonController {
         print(e);
       }
     }
-    return courses;
+    return lessons;
   }
 }
