@@ -142,6 +142,7 @@ final imageurl = "";
                       icon: Icons.notifications,
                       title: 'notifications',
                       onPressed: () {
+                        model.getNotification();
                         Navigator.pushNamed(context, NotificationsScreen.route);
                       }),
                   _card(

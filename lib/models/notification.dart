@@ -13,6 +13,6 @@ class NotificationData {
       @required this.isLive,
       @required this.category,
       @required this.date,
-      @required this.startDuration,
-      @required this.endDuration});
+      this.startDuration,
+       this.endDuration});
 }

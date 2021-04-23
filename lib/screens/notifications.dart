@@ -22,7 +22,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             context: context,
           ),
           drawer: AppDrawer(),
-          body: ListView.builder(
+          body: model.loadingNotification?Center(child: Container(width: 40 , height: 40, child: CircularProgressIndicator(),)): model.notifications.length ==0 ? Center(child :Text("Theree is no notifications Yet", style: TextStyle(color: Colors.white , fontSize: 16),)):
+          ListView.builder(
               itemCount: model.notifications.length + 1,
               itemBuilder: (BuildContext context, int index) {
                 if (index == 0) {

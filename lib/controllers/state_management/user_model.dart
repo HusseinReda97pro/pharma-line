@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/user_controller.dart';
 import 'package:pharma_line/models/history.dart';
+import 'package:pharma_line/models/notification.dart';
 import 'package:pharma_line/models/user.dart';
 
 mixin UserModel on ChangeNotifier {
@@ -16,6 +17,8 @@ mixin UserModel on ChangeNotifier {
   //     points: 150);
   UserController userController = UserController();
   List<History> history = [];
+  //List<NotificationData> Notification = [];
+
   // = [
   //   History(
   //       status: HistoryStatus.SPEND,
@@ -109,4 +112,14 @@ mixin UserModel on ChangeNotifier {
     loadingHistory = false;
     notifyListeners();
   }
+
+/*
+  bool loadingNotification = false;
+  Future<void> getNotification() async {
+    loadingNotification = true;
+    notifyListeners();
+    Notification = await userController.getNotification(currentUser.token);
+    loadingHistory = false;
+    notifyListeners();
+  }*/
 }

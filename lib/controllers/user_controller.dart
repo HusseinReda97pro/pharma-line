@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:pharma_line/config/basic_config.dart';
 import 'package:pharma_line/models/history.dart';
 import 'package:pharma_line/models/history_status.dart';
+import 'package:pharma_line/models/notification.dart';
 import 'package:pharma_line/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,6 +74,7 @@ class UserController {
 
   Future<dynamic> login(String email, String password) async {
     String deviceId = await DeviceToken.getId();
+    print("________________________");
     print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
     var data = {
@@ -198,4 +200,34 @@ class UserController {
     }
     return Histories;
   }
+
+
+
+
+  Future<List<NotificationData>> getNotification(token) async {
+    List<NotificationData> Notification = [];
+    //String lessontatus;
+    Uri url = Uri.parse(BASIC_URL + '/api/v1/student/myNotifications');
+    http.Response response = await http
+        .get(url, headers: {io.HttpHeaders.authorizationHeader: token});
+    var data = json.decode(response.body);
+    print('______________________________________');
+    print(data);
+    try {
+      for (var notifcation in data) {
+        Notification.add(
+     NotificationData(title: notifcation['title'],
+                      isLive: notifcation['isLive'],
+                      category: notifcation['label'],
+                      date: DateTime.parse(notifcation['date']))
+     );
+      }
+    } catch (e) {
+      print(e);
+    }
+    return Notification;
+  }
+
+
+
 }

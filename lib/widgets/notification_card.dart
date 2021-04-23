@@ -55,7 +55,7 @@ class _NotificationCardState extends State<NotificationCard> {
                             color: Palette.lighterBlue, fontSize: 14.0),
                       ),
                     ),
-                    Text(
+                   /* Text(
                       notification.startDuration.minute.toString() +
                           ':' +
                           notification.startDuration.second.toString() +
@@ -65,7 +65,7 @@ class _NotificationCardState extends State<NotificationCard> {
                           notification.endDuration.minute.toString(),
                       style:
                           TextStyle(color: Palette.lighterBlue, fontSize: 14.0),
-                    ),
+                    ),*/
                   ],
                 ),
               ),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "424230914206",
+    "project_id": "pharma-line",
+    "storage_bucket": "pharma-line.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424230914206:android:8268b303521d6c13a1538f",
+        "android_client_info": {
+          "package_name": "com.e_learning.pharma_line"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424230914206-t766f6rideiol4er25mrq4hipsl7oviu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt8caC_lbXahOk4TfI73KsccIq38CD-Rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424230914206-t766f6rideiol4er25mrq4hipsl7oviu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

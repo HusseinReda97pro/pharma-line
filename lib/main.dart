@@ -11,9 +11,19 @@ import 'package:pharma_line/screens/search.dart';
 import 'package:pharma_line/screens/user_info.dart';
 import 'package:pharma_line/screens/wallet.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseApp app = await Firebase.initializeApp();
+  FirebaseMessaging messaging =  FirebaseMessaging.instance;
+  messaging.subscribeToTopic("60826d279d5e54001ceb0e1b");
+  FirebaseMessaging.onMessage.listen((event) {
+    print(event.data);
+  });
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
