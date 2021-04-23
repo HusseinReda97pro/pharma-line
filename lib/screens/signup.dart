@@ -333,16 +333,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 margin: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.05),
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        return Palette
-                            .lightBlue; // Use the component's default.
-                      },
-                    ),
-                  ),
+                  style: ElevatedButton.styleFrom(primary: Palette.lightBlue),
                   onPressed: () async {
-                    //TODO signup
                     if (emailController.text.isNotEmpty &&
                         firstNameController.text.isNotEmpty &&
                         lastNameController.text.isNotEmpty &&

@@ -9,7 +9,7 @@ mixin LessonModel on ChangeNotifier {
   Future<void> getCourses() async {
     loadingLessons = true;
     notifyListeners();
-    currentLessons = await courseController.getCourses();
+    // currentLessons = await courseController.getCourses();
     loadingLessons = false;
     notifyListeners();
   }

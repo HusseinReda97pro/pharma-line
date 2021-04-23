@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : RefreshIndicator(
                     onRefresh: model.getCourses,
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: model.currentCourses.length + 2,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 0) {

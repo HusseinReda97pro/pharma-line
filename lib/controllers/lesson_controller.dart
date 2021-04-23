@@ -26,19 +26,19 @@ class LessonController {
     List<Lesson> lessons = [];
     for (var course in body) {
       try {
-        lessons.add(
-          Course(
-              id: course['_id'],
-              title: course['title'],
-              description: course['description'],
-              imageUrl: course['imageUrl'],
-              teacher: course['teacher']['firstName'] +
-                  course['teacher']['lastName'],
-              label: course['label'],
-              faculty: '',
-              university: '',
-              isLive: false),
-        );
+        // lessons.add(
+        //   Course(
+        //       id: course['_id'],
+        //       title: course['title'],
+        //       description: course['description'],
+        //       imageUrl: course['imageUrl'],
+        //       teacher: course['teacher']['firstName'] +
+        //           course['teacher']['lastName'],
+        //       label: course['label'],
+        //       faculty: '',
+        //       university: '',
+        //       isLive: false),
+        // );
       } catch (e) {
         print(e);
       }
