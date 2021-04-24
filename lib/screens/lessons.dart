@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
+import 'package:pharma_line/widgets/app_drawer.dart';
 import 'package:pharma_line/widgets/lesson_card.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///D:/MobileDevelopment/pharma_line/lib/widgets/app_drawer.dart';
-
 class LessonsScreen extends StatefulWidget {
   static const route = '/lessons';
+  final String courseId;
+
+  const LessonsScreen({@required this.courseId});
+
   @override
   _LessonsScreenState createState() => _LessonsScreenState();
 }
@@ -40,54 +42,16 @@ class _LessonsScreenState extends State<LessonsScreen> {
                     )
                   : ListView.builder(
                       physics: BouncingScrollPhysics(),
-                      itemCount: model.currentLessons.length + 2,
+                      itemCount: model.currentLessons.length + 1,
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == 0) {
-                          return model.currentUser == null
-                              ? Container()
-                              : Container(
-                                  margin: EdgeInsets.all(25.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Hi  ',
-                                            style: TextStyle(
-                                                color: Palette.lightBlue,
-                                                fontSize: 22.0),
-                                          ),
-                                          Text(
-                                            model.currentUser.firstName +
-                                                ' ' +
-                                                model.currentUser.lastName +
-                                                '!',
-                                            style: TextStyle(
-                                                color: Palette.lightBlue,
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                      Text(
-                                        'Ready to learn?',
-                                        style: TextStyle(
-                                            color: Palette.lightBlue,
-                                            fontSize: 22.0),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                        }
-                        if (index == model.currentLessons.length + 1) {
+                        if (index == model.currentLessons.length) {
                           return SizedBox(
                             height: 100,
                           );
                         }
                         return LessonCard(
-                          lesson: model.currentLessons[index - 1],
+                          lesson: model.currentLessons[index],
+                          courseId: widget.courseId,
                         );
                       },
                     ),

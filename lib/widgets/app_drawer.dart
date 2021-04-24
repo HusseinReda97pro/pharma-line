@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/profile.dart';
+import 'package:pharma_line/screens/signup.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -45,24 +47,14 @@ class AppDrawer extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                model.currentUser == null
-                    ? _listTile(
-                        context: context,
-                        title: 'Login',
-                        icon: Icons.person,
-                        onPressed: () {
-                          Navigator.pushNamed(context, LoginScreen.route);
-                        },
-                      )
-                    : _listTile(
-                        context: context,
-                        title: 'Logout',
-                        icon: Icons.logout,
-                        onPressed: () {
-                          model.logout();
-                          Navigator.pop(context);
-                        },
-                      ),
+                _listTile(
+                  context: context,
+                  title: 'Home',
+                  icon: Icons.home,
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, HomeScreen.route);
+                  },
+                ),
                 model.currentUser != null
                     ? _listTile(
                         context: context,
@@ -85,6 +77,41 @@ class AppDrawer extends StatelessWidget {
                           Navigator.pushNamed(context, ProfileScreen.route);
                         },
                       ),
+                model.currentUser == null
+                    ? _listTile(
+                        context: context,
+                        title: 'Login',
+                        icon: Icons.person,
+                        onPressed: () {
+                          Navigator.pushNamed(context, LoginScreen.route);
+                        },
+                      )
+                    : _listTile(
+                        context: context,
+                        title: 'Logout',
+                        icon: Icons.logout,
+                        onPressed: () {
+                          model.logout();
+                          Navigator.pop(context);
+                        },
+                      ),
+                model.currentUser == null
+                    ? _listTile(
+                        context: context,
+                        title: 'Signup',
+                        icon: Icons.person_add,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return SignUpScreen();
+                              },
+                            ),
+                          );
+                        },
+                      )
+                    : Container(),
               ],
             ),
           ),

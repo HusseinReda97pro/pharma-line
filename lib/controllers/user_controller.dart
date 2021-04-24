@@ -64,6 +64,11 @@ class UserController {
         print(errors);
         return {'errors': errors};
       }
+      if (body['message'] != null) {
+        return {
+          'errors': ['something went wrong']
+        };
+      }
       return {'user': body};
     } catch (e) {
       return {
@@ -77,15 +82,16 @@ class UserController {
     print("________________________");
     print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
-    var data = {
-      'email': email,
-      'password': password,
-      'deviceId': '85b4eb344ee3b1f4' //TODO edit deviceid
-    };
+    var data = {'email': email, 'password': password, 'deviceId': deviceId};
 
     try {
       http.Response response = await http.post(postUri, body: data);
       print(response.body);
+      if (response.body == 'Unauthorized') {
+        return {
+          'errors': ['Unauthorized']
+        };
+      }
       var body = json.decode(response.body);
 
       if (body['errors'] != null) {
@@ -201,9 +207,6 @@ class UserController {
     return Histories;
   }
 
-
-
-
   Future<List<NotificationData>> getNotification(token) async {
     List<NotificationData> Notification = [];
     //String lessontatus;
@@ -215,19 +218,15 @@ class UserController {
     print(data);
     try {
       for (var notifcation in data) {
-        Notification.add(
-     NotificationData(title: notifcation['title'],
-                      isLive: notifcation['isLive'],
-                      category: notifcation['label'],
-                      date: DateTime.parse(notifcation['date']))
-     );
+        Notification.add(NotificationData(
+            title: notifcation['title'],
+            isLive: notifcation['isLive'],
+            category: notifcation['label'],
+            date: DateTime.parse(notifcation['date'])));
       }
     } catch (e) {
       print(e);
     }
     return Notification;
   }
-
-
-
 }

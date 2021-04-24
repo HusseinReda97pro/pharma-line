@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/course_controller.dart';
+import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/course.dart';
 
 mixin CourseModel on ChangeNotifier {
@@ -13,6 +14,9 @@ mixin CourseModel on ChangeNotifier {
     loadingCourses = true;
     notifyListeners();
     homeCourses = await courseController.getCourses();
+    if (MyApp.mainModel.currentUser != null) {
+      getMyCourses(token: MyApp.mainModel.currentUser.token);
+    }
     loadingCourses = false;
     notifyListeners();
   }

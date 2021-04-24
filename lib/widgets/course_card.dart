@@ -6,6 +6,7 @@ import 'package:pharma_line/controllers/course_controller.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/screens/lessons.dart';
+import 'package:pharma_line/screens/login.dart';
 import 'package:provider/provider.dart';
 
 import 'loading_box.dart';
@@ -52,13 +53,16 @@ class CourseCard extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
                 onPressed: () async {
-                  // if(model.)
-                  loadingBox(context);
-                  await CourseController().enrollCourse(
-                      token: model.currentUser.token, courseId: course.id);
-                  Navigator.pop(context);
-                  _EnrollmentMessage(
-                      context: context, title: title, model: model);
+                  if (model.currentUser == null) {
+                    _handelLogin(context: context);
+                  } else {
+                    loadingBox(context);
+                    await CourseController().enrollCourse(
+                        token: model.currentUser.token, courseId: course.id);
+                    Navigator.pop(context);
+                    _enrollmentMessage(
+                        context: context, title: title, model: model);
+                  }
                 },
                 child: Text('Enroll'),
               ),
@@ -67,7 +71,51 @@ class CourseCard extends StatelessWidget {
         });
   }
 
-  _EnrollmentMessage(
+  _handelLogin({@required BuildContext context}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0.0,
+            title: Container(child: new Text('Enrollment')),
+            content: Container(
+              height: 80,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Text(
+                      "you need to login first",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('cancel'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
+                onPressed: () {
+                  Navigator.pushNamed(context, LoginScreen.route);
+                },
+                child: Text('Login'),
+              ),
+            ],
+          );
+        });
+  }
+
+  _enrollmentMessage(
       {@required BuildContext context,
       @required String title,
       @required MainModel model}) {
@@ -116,7 +164,14 @@ class CourseCard extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             model.getLessons(courseId: course.id);
-            Navigator.pushNamed(context, LessonsScreen.route);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return LessonsScreen(courseId: course.id);
+                },
+              ),
+            );
           },
           child: Container(
             margin: EdgeInsets.symmetric(

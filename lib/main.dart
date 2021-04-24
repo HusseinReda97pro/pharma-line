@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/home.dart';
-import 'package:pharma_line/screens/lessons.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/notifications.dart';
@@ -15,16 +14,15 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseApp app = await Firebase.initializeApp();
-  FirebaseMessaging messaging =  FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   messaging.subscribeToTopic("60826d279d5e54001ceb0e1b");
   FirebaseMessaging.onMessage.listen((event) {
     print(event.data);
   });
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -55,7 +53,6 @@ class MyApp extends StatelessWidget {
               NotificationsScreen(),
           ScheduleScreen.route: (BuildContext context) => ScheduleScreen(),
           MyCoursesScreen.route: (BuildContext context) => MyCoursesScreen(),
-          LessonsScreen.route: (BuildContext context) => LessonsScreen(),
         },
       ),
     );

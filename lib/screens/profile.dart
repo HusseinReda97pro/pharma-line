@@ -24,7 +24,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File _image;
 
-final imageurl = "";
+  final imageurl = "";
   Widget _card(
       {@required IconData icon,
       @required String title,
@@ -68,14 +68,11 @@ final imageurl = "";
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<MainModel>(
         builder: (BuildContext context, MainModel model, Widget child) {
-
 //          ImageProvider image = NetworkImage(
 //              model.currentUser.profileImageUrl,
 //              headers: {"Authorization":  model.currentUser.token});
-
 
 //import 'package:http/http.dart' as http;
 //final response = await http.get(
@@ -90,9 +87,10 @@ final imageurl = "";
         drawer: AppDrawer(),
         body: ListView(
           children: [
-
             ProfileImagePicker(
-                image: _image, imageUrl: model.currentUser.profileImageUrl , model: model),
+                image: _image,
+                imageUrl: model.currentUser.profileImageUrl,
+                model: model),
             Container(
               margin: EdgeInsets.all(10.0),
               child: Text(
@@ -104,7 +102,7 @@ final imageurl = "";
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
               child: Text(
-                'Points: ' + model.currentUser.points.toString(),
+                'virtual Points: ' + model.currentUser.points.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Palette.lightBlue, fontSize: 12.0),
               ),

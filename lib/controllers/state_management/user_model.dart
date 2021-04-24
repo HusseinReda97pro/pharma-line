@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/user_controller.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/history.dart';
-import 'package:pharma_line/models/notification.dart';
 import 'package:pharma_line/models/user.dart';
 
 mixin UserModel on ChangeNotifier {

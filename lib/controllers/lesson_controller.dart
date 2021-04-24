@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:pharma_line/config/basic_config.dart';
 import 'package:pharma_line/models/lesson.dart';
@@ -31,6 +32,60 @@ class LessonController {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  Future<dynamic> getLesson(
+      {@required String token,
+      @required String courseId,
+      @required String lessonId}) async {
+    try {
+      var uri = Uri.parse(BASIC_URL +
+          "/api/v1/student/myCourses/lesson?courseId=$courseId&lessonId=$lessonId");
+      var response = await get(uri, headers: {'Authorization': token});
+      print(response.body);
+      if (response.body == 'Unauthorized') {
+        return {'error': 'Unauthorized'};
+      }
+      var body = json.decode(response.body);
+      if (body['message'] != null) {
+        return {'error': body['message']};
+      }
+      return {
+        'lesson': Lesson(
+            id: body['id'],
+            description: body['description'],
+            title: body['title'],
+            price: body['price'],
+            imageUrl: body['imageUrl'],
+            videoUrl: body['videoUrl'],
+            pdfUrl: body['pdfUrl'])
+      };
+    } catch (_) {
+      return {'error': 'somethin went worng'};
+    }
+  }
+
+  Future<dynamic> enrollInLesson(
+      {@required String token,
+      @required String courseId,
+      @required String lessonId}) async {
+    try {
+      var uri = Uri.parse(BASIC_URL + "/api/v1/student/myCourses/lesson");
+      var response = await post(uri,
+          body: {'courseId': courseId, 'lessonId': lessonId},
+          headers: {'Authorization': token});
+      print(response.body);
+      if (response.body == 'Unauthorized') {
+        return {'error': 'Unauthorized'};
+      }
+      var body = json.decode(response.body);
+      if (body['message'] != null) {
+        return {'error': body['message']};
+      }
+      return body;
+    } catch (_) {
+      return {'error': 'somethin went worng'};
     }
   }
 
