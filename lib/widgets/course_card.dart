@@ -52,7 +52,7 @@ class CourseCard extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
                 onPressed: () async {
-                  if(model.)
+                  // if(model.)
                   loadingBox(context);
                   await CourseController().enrollCourse(
                       token: model.currentUser.token, courseId: course.id);
