@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/home.dart';
+import 'package:pharma_line/screens/lessons.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/notifications.dart';
@@ -32,6 +33,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     mainModel.autoLogin();
     mainModel.getCourses();
+    if (mainModel.currentCourses != null) {
+      try {
+        mainModel.getMyCourses(token: mainModel.currentUser.token);
+      } catch (_) {}
+    }
     return ChangeNotifierProvider(
       create: (context) => mainModel,
       child: MaterialApp(
@@ -49,6 +55,7 @@ class MyApp extends StatelessWidget {
               NotificationsScreen(),
           ScheduleScreen.route: (BuildContext context) => ScheduleScreen(),
           MyCoursesScreen.route: (BuildContext context) => MyCoursesScreen(),
+          LessonsScreen.route: (BuildContext context) => LessonsScreen(),
         },
       ),
     );

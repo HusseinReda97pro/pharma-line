@@ -69,6 +69,7 @@ class AppDrawer extends StatelessWidget {
                         title: 'My Courses',
                         icon: Icons.book,
                         onPressed: () {
+                          print(model.currentUser.token);
                           model.getMyCourses(token: model.currentUser.token);
                           Navigator.pushNamed(context, MyCoursesScreen.route);
                         },

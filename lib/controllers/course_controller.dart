@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:pharma_line/config/basic_config.dart';
 import 'package:pharma_line/models/course.dart';
@@ -11,7 +12,7 @@ class CourseController {
       http.Response response = await http.get(
         postUri,
       );
-      print(response.body);
+      // print(response.body);
       var body = json.decode(response.body);
 
       return await convertToCourses(body);
@@ -26,7 +27,7 @@ class CourseController {
     try {
       http.Response response =
           await http.get(postUri, headers: {'Authorization': token});
-      print(response.body);
+      // print(response.body);
       var body = json.decode(response.body);
 
       return await convertToCourses(body);
@@ -46,17 +47,28 @@ class CourseController {
               title: course['title'],
               description: course['description'],
               imageUrl: course['imageUrl'],
-              teacher: course['teacher']['firstName'] +
-                  course['teacher']['lastName'],
+              teacher: ' Teacher Name',
+              // course['teacher']['firstName'] +
+              //     course['teacher']['lastName'],
               label: course['label'],
               faculty: '',
               university: '',
               isLive: false),
         );
       } catch (e) {
+        print('Add Course Error');
         print(e);
       }
     }
     return courses;
+  }
+
+  Future<void> enrollCourse(
+      {@required String token, @required String courseId}) async {
+    Uri url = Uri.parse(
+        'https://pharmaline.herokuapp.com/api/v1/student/enrollCourse');
+    http.Response response = await http
+        .post(url, body: {"id": courseId}, headers: {'Authorization': token});
+    print(response.body);
   }
 }

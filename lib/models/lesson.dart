@@ -7,14 +7,14 @@ class Lesson {
   final String imageUrl;
   final String videoUrl;
   final String pdfUrl;
-  final double price;
+  final int price;
 
   Lesson(
       {@required this.id,
       @required this.description,
       @required this.title,
-      @required this.imageUrl,
-      @required this.videoUrl,
-      @required this.pdfUrl,
+      this.imageUrl,
+      this.videoUrl,
+      this.pdfUrl,
       @required this.price});
 }
