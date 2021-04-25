@@ -148,7 +148,7 @@ class LessonCard extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: Text(
-                      'Enroll in course:' + lesson.title + ' successfully',
+                      'Enroll in lesson:' + lesson.title + ' successfully',
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,

@@ -15,7 +15,7 @@ mixin CourseModel on ChangeNotifier {
     notifyListeners();
     homeCourses = await courseController.getCourses();
     if (MyApp.mainModel.currentUser != null) {
-      getMyCourses(token: MyApp.mainModel.currentUser.token);
+      await getMyCourses(token: MyApp.mainModel.currentUser.token);
     }
     loadingCourses = false;
     notifyListeners();
@@ -36,6 +36,15 @@ mixin CourseModel on ChangeNotifier {
 
   void addCourseId(courseId) {
     currentUserCoursesIds.add(courseId);
+    notifyListeners();
+  }
+
+  Future<void> getCoursesByFacultyId({@required String facultyId}) async {
+    loadingCourses = true;
+    notifyListeners();
+    currentCourses =
+        await courseController.getCoursesByFacultyId(facultyId: facultyId);
+    loadingCourses = false;
     notifyListeners();
   }
 }

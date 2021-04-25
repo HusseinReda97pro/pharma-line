@@ -37,6 +37,24 @@ class CourseController {
     }
   }
 
+  Future<List<Course>> getCoursesByFacultyId(
+      {@required String facultyId}) async {
+    var postUri =
+        Uri.parse(BASIC_URL + "/api/v1/courses/faculty?facultyId=$facultyId");
+    try {
+      http.Response response = await http.get(
+        postUri,
+      );
+      // print(response.body);
+      var body = json.decode(response.body);
+
+      return await convertToCourses(body);
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<Course>> convertToCourses(body) async {
     List<Course> courses = [];
     for (var course in body) {
@@ -60,6 +78,7 @@ class CourseController {
         print(e);
       }
     }
+    print(courses.length);
     return courses;
   }
 
