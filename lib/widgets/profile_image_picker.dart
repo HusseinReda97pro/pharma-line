@@ -62,6 +62,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
                         : widget.imageUrl != null
                             ? Image.network(
                         "https://pharmaline.herokuapp.com/api/v1/student/profilePicture",
+                      fit: BoxFit.cover,
                       headers: {"Authorization":  widget.model.currentUser.token})
                             : Image.asset(
                                 'assets/images/profile_picture_placeholder.jpg',

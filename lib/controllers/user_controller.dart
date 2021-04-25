@@ -196,7 +196,7 @@ class UserController {
           History(
               amount: hist['transactionAmout'],
               status: userstatus,
-              lessonName: 'test'
+              lessonName: hist['title'] ?? hist['transactionType']
               // hist['productId']
               ),
         );

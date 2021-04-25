@@ -65,7 +65,7 @@ class CourseController {
               title: course['title'],
               description: course['description'],
               imageUrl: course['imageUrl'],
-              teacher: ' Teacher Name',
+              teacher: course['teacher']['firstName'] + " " +course['teacher']['lastName'],
               // course['teacher']['firstName'] +
               //     course['teacher']['lastName'],
               label: course['label'],
