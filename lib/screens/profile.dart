@@ -22,9 +22,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File _image;
-
-  final imageurl = "";
   Widget _card(
       {@required IconData icon,
       @required String title,
@@ -70,16 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Consumer<MainModel>(
         builder: (BuildContext context, MainModel model, Widget child) {
-//          ImageProvider image = NetworkImage(
-//              model.currentUser.profileImageUrl,
-//              headers: {"Authorization":  model.currentUser.token});
-
-//import 'package:http/http.dart' as http;
-//final response = await http.get(
-//    Uri.parse('https://pharmaline.herokuapp.com/api/v1/student/profilePicture'),
-//    headers: {HttpHeaders.authorizationHeader: model.currentUser.token},
-//  );
-
       return Scaffold(
         appBar: MainAppBar(
           context: context,
@@ -87,22 +74,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
         drawer: AppDrawer(),
         body: ListView(
           children: [
-            ProfileImagePicker(
-                image: _image,
-                imageUrl: model.currentUser.profileImageUrl,
-                model: model),
+            Row(
+              children: [
+                Expanded(child: SizedBox()),
+                Container(
+                  width: 150.0,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(75),
+                    border: Border.all(color: Palette.lightBlue, width: 3.0),
+                  ),
+                  child: ClipOval(
+                    child: model.currentUser?.profileImageUrl != null
+                        ? Image.network(
+                            "https://pharmaline.herokuapp.com/api/v1/student/profilePicture",
+                            headers: {
+                              "Authorization": model.currentUser?.token
+                            },
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/images/profile_picture_placeholder.jpg',
+                            fit: BoxFit.cover),
+                  ),
+                ),
+                Expanded(child: SizedBox()),
+              ],
+            ),
             Container(
               margin: EdgeInsets.all(10.0),
-              child: Text(
-                model.currentUser.firstName + ' ' + model.currentUser.lastName,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Palette.lightBlue, fontSize: 18.0),
-              ),
+              child: model.currentUser != null
+                  ? Text(
+                      model.currentUser.firstName +
+                          ' ' +
+                          model.currentUser.lastName,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: Palette.lightBlue, fontSize: 18.0),
+                    )
+                  : Container(),
             ),
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
               child: Text(
-                'virtual Points: ' + model.currentUser.points.toString(),
+                'virtual Points: ' + model.currentUser?.points.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Palette.lightBlue, fontSize: 12.0),
               ),

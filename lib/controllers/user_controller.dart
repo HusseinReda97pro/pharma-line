@@ -43,17 +43,9 @@ class UserController {
     // add file to multipart
     request.files.add(multipartFile);
 
-    print(request.fields);
-    print(request.files);
-
     try {
-      // return {
-      //   'errors': ['something went wrong']
-      // };
       var response = await request.send();
       final res = await http.Response.fromStream(response);
-      print(res.body);
-      print(response.statusCode);
       var body = json.decode(res.body);
 
       if (body['errors'] != null) {
@@ -61,7 +53,6 @@ class UserController {
         for (var error in body['errors'].values) {
           errors.add(error['message']);
         }
-        print(errors);
         return {'errors': errors};
       }
       if (body['message'] != null) {
@@ -79,14 +70,11 @@ class UserController {
 
   Future<dynamic> login(String email, String password) async {
     String deviceId = await DeviceToken.getId();
-    print("________________________");
-    print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
     var data = {'email': email, 'password': password, 'deviceId': deviceId};
 
     try {
       http.Response response = await http.post(postUri, body: data);
-      print(response.body);
       if (response.body == 'Unauthorized') {
         return {
           'errors': ['Unauthorized']
@@ -99,8 +87,72 @@ class UserController {
         for (var error in body['errors'].values) {
           errors.add(error['message']);
         }
-        print(errors);
         return {'errors': errors};
+      }
+      return {'user': body};
+    } catch (e) {
+      print(e);
+      return {
+        'errors': ['something went wrong']
+      };
+    }
+  }
+
+  Future<dynamic> updateUserInfo(
+      User user, String password, io.File image, String token) async {
+    String deviceId = await DeviceToken.getId();
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/student/updateProfile");
+    var request = new http.MultipartRequest("POST", postUri);
+
+    // request.fields['email'] = user.email.isNotEmpty ? user.email : null;
+    if (user.firstName.isNotEmpty) {
+      request.fields['firstName'] = user.firstName;
+    }
+    if (user.lastName.isNotEmpty) {
+      request.fields['lastName'] = user.lastName;
+    }
+    // request.fields['phoneNumber'] =
+    //     user.phoneNumber.isNotEmpty ? user.phoneNumber : null;
+    if (password.isNotEmpty) {
+      request.fields['password'] = password;
+    }
+    if (image != null) {
+      // request.files.add(new http.MultipartFile.fromBytes(
+      //   'profilePicture',
+      //   await image.readAsBytes(),
+      // ));
+      // open a bytestream
+      var stream =
+          new http.ByteStream(DelegatingStream.typed(image.openRead()));
+      // get file length
+      var length = await image.length();
+
+      // multipart that takes file
+      var multipartFile = new http.MultipartFile(
+          'profilePicture', stream, length,
+          filename: basename(image.path));
+
+      // add file to multipart
+      request.files.add(multipartFile);
+    }
+
+    try {
+      request.headers['Authorization'] = token;
+      var response = await request.send();
+      final res = await http.Response.fromStream(response);
+      var body = json.decode(res.body);
+
+      if (body['errors'] != null) {
+        List<String> errors = [];
+        for (var error in body['errors'].values) {
+          errors.add(error['message']);
+        }
+        return {'errors': errors};
+      }
+      if (body['message'] != null) {
+        return {
+          'errors': ['something went wrong']
+        };
       }
       return {'user': body};
     } catch (e) {
@@ -178,7 +230,6 @@ class UserController {
     http.Response response = await http
         .get(url, headers: {io.HttpHeaders.authorizationHeader: token});
     var data = json.decode(response.body);
-    print(data);
 
     try {
       for (var hist in data) {
@@ -214,8 +265,7 @@ class UserController {
     http.Response response = await http
         .get(url, headers: {io.HttpHeaders.authorizationHeader: token});
     var data = json.decode(response.body);
-    print('______________________________________');
-    print(data);
+
     try {
       for (var notifcation in data) {
         Notification.add(NotificationData(
