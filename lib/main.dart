@@ -8,6 +8,7 @@ import 'package:pharma_line/screens/notifications.dart';
 import 'package:pharma_line/screens/profile.dart';
 import 'package:pharma_line/screens/schedule.dart';
 import 'package:pharma_line/screens/search.dart';
+import 'package:pharma_line/screens/signup.dart';
 import 'package:pharma_line/screens/user_info.dart';
 import 'package:pharma_line/screens/wallet.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
               NotificationsScreen(),
           ScheduleScreen.route: (BuildContext context) => ScheduleScreen(),
           MyCoursesScreen.route: (BuildContext context) => MyCoursesScreen(),
+          SignUpScreen.route: (BuildContext context) => SignUpScreen(),
         },
       ),
     );

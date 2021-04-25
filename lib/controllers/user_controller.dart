@@ -102,6 +102,7 @@ class UserController {
         print(errors);
         return {'errors': errors};
       }
+
       return {'user': body};
     } catch (e) {
       print(e);
