@@ -115,8 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (res != null) {
                           _showErrors(context, res['errors']);
                         } else {
-                          Navigator.pushReplacementNamed(
-                              context, HomeScreen.route);
+                          Navigator.popUntil(
+                              context, ModalRoute.withName(HomeScreen.route));
                         }
                       },
                       child: Text(
@@ -147,14 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         model.getUniversities();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return SignUpScreen();
-                            },
-                          ),
-                        );
+                        Navigator.pushNamed(context, SignUpScreen.route);
                       },
                       child: Text(
                         'Sign up',

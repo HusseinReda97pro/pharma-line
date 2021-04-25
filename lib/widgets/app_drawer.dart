@@ -30,6 +30,18 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
+  void _navigeteToPage(BuildContext context, String routeName) {
+    String name = ModalRoute.of(context).settings.name;
+    if (routeName == name) {
+      Navigator.of(context).pop();
+    } else if (routeName == HomeScreen.route) {
+      Navigator.of(context).popUntil(ModalRoute.withName(HomeScreen.route));
+    } else {
+      Navigator.of(context).popUntil(ModalRoute.withName(HomeScreen.route));
+      Navigator.of(context).pushNamed(routeName);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MainModel>(
@@ -52,7 +64,7 @@ class AppDrawer extends StatelessWidget {
                   title: 'Home',
                   icon: Icons.home,
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, HomeScreen.route);
+                    _navigeteToPage(context, HomeScreen.route);
                   },
                 ),
                 model.currentUser != null
@@ -63,7 +75,7 @@ class AppDrawer extends StatelessWidget {
                         onPressed: () {
                           print(model.currentUser.token);
                           model.getMyCourses(token: model.currentUser.token);
-                          Navigator.pushNamed(context, MyCoursesScreen.route);
+                          _navigeteToPage(context, MyCoursesScreen.route);
                         },
                       )
                     : Container(),
@@ -74,7 +86,7 @@ class AppDrawer extends StatelessWidget {
                         title: 'Profile',
                         icon: Icons.person,
                         onPressed: () {
-                          Navigator.pushNamed(context, ProfileScreen.route);
+                          _navigeteToPage(context, ProfileScreen.route);
                         },
                       ),
                 model.currentUser == null
@@ -83,7 +95,7 @@ class AppDrawer extends StatelessWidget {
                         title: 'Login',
                         icon: Icons.person,
                         onPressed: () {
-                          Navigator.pushNamed(context, LoginScreen.route);
+                          _navigeteToPage(context, LoginScreen.route);
                         },
                       )
                     : _listTile(
@@ -101,14 +113,7 @@ class AppDrawer extends StatelessWidget {
                         title: 'Signup',
                         icon: Icons.person_add,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return SignUpScreen();
-                              },
-                            ),
-                          );
+                          _navigeteToPage(context, SignUpScreen.route);
                         },
                       )
                     : Container(),

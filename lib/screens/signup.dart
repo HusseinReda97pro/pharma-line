@@ -14,6 +14,7 @@ import 'package:pharma_line/widgets/loading_box.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static final String route = '/signup';
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -96,8 +97,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, HomeScreen.route);
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(HomeScreen.route));
                 },
                 child: Text(
                   'okay',
@@ -135,14 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           elevation: 0,
           title: GestureDetector(
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return LoginScreen();
-                  },
-                ),
-              );
+              Navigator.pop(context);
             },
             child: Row(
               children: [
