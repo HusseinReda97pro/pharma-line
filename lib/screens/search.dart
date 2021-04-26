@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
-import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/models/faculty.dart';
 import 'package:pharma_line/models/university.dart';
 import 'package:pharma_line/widgets/app_bar.dart';

@@ -94,6 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+        // floatingActionButton: FloatingActionButton(
+        //   child: Icon(Icons.ac_unit),
+        //   onPressed: () {
+        //     model.getUserCoursesAndLessons();
+        //   },
+        // ),
       );
     });
   }

@@ -65,7 +65,9 @@ class CourseController {
               title: course['title'],
               description: course['description'],
               imageUrl: course['imageUrl'],
-              teacher: course['teacher']['firstName'] + " " +course['teacher']['lastName'],
+              teacher: course['teacher']['firstName'] +
+                  " " +
+                  course['teacher']['lastName'],
               // course['teacher']['firstName'] +
               //     course['teacher']['lastName'],
               label: course['label'],
@@ -84,10 +86,39 @@ class CourseController {
 
   Future<void> enrollCourse(
       {@required String token, @required String courseId}) async {
-    Uri url = Uri.parse(
-        'https://pharmaline.herokuapp.com/api/v1/student/enrollCourse');
+    Uri url = Uri.parse(BASIC_URL + '/api/v1/student/enrollCourse');
     http.Response response = await http
         .post(url, body: {"id": courseId}, headers: {'Authorization': token});
     print(response.body);
+  }
+
+  Future<dynamic> getUserCoursesAndLessons({@required String token}) async {
+    Uri url = Uri.parse(BASIC_URL + '/api/v1/student/mycourses');
+    http.Response response =
+        await http.get(url, headers: {'Authorization': token});
+    print(response.body);
+    try {
+      List<String> coursesIds = [];
+      List<String> lessonsIds = [];
+
+      var body = json.decode(response.body);
+      for (var course in body) {
+        try {
+          coursesIds.add(course['_id']);
+          for (var lesson in course['lessons']) {
+            try {
+              lessonsIds.add(lesson['_id']);
+            } catch (_) {}
+          }
+        } catch (_) {}
+      }
+      print(coursesIds);
+      print(lessonsIds);
+      return {'coursesIds': coursesIds, 'lessonsIds': lessonsIds};
+    } catch (e) {
+      print('get user courses and lessons ids Error:');
+      print(e);
+      return {'coursesIds': [], 'lessonsIds': []};
+    }
   }
 }

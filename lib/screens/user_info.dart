@@ -12,7 +12,6 @@ import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/app_drawer.dart';
 import 'package:pharma_line/widgets/input.dart';
 import 'package:pharma_line/widgets/loading_box.dart';
-import 'package:pharma_line/widgets/profile_image_picker.dart';
 import 'package:provider/provider.dart';
 
 class UserInfoScreen extends StatefulWidget {
@@ -100,7 +99,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
-  Future<void> _UpdatedSuccessfully(BuildContext context) async {
+  Future<void> _updatedSuccessfully(BuildContext context) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -362,7 +361,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     if (res['errors'] != null) {
                       _showErrors(context, res['errors']);
                     } else {
-                      _UpdatedSuccessfully(context);
+                      _updatedSuccessfully(context);
                     }
                   },
                   child: Text(

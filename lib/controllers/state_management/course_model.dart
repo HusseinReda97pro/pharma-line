@@ -7,7 +7,6 @@ mixin CourseModel on ChangeNotifier {
   CourseController courseController = CourseController();
   List<Course> currentCourses = [];
   List<Course> homeCourses = [];
-  List<String> currentUserCoursesIds = [];
 
   bool loadingCourses = false;
   Future<void> getCourses() async {
@@ -27,16 +26,6 @@ mixin CourseModel on ChangeNotifier {
     currentCourses = await courseController.getMyCourses(token);
     loadingCourses = false;
     notifyListeners();
-    currentUserCoursesIds.clear();
-    for (Course course in currentCourses) {
-      currentUserCoursesIds.add(course.id);
-    }
-    notifyListeners();
-  }
-
-  void addCourseId(courseId) {
-    currentUserCoursesIds.add(courseId);
-    notifyListeners();
   }
 
   Future<void> getCoursesByFacultyId({@required String facultyId}) async {
@@ -46,5 +35,15 @@ mixin CourseModel on ChangeNotifier {
         await courseController.getCoursesByFacultyId(facultyId: facultyId);
     loadingCourses = false;
     notifyListeners();
+  }
+
+  Future<void> getUserCoursesAndLessons() async {
+    if (MyApp.mainModel.currentUser != null) {
+      var res = await courseController.getUserCoursesAndLessons(
+          token: MyApp.mainModel.currentUser.token);
+      MyApp.mainModel.currentUser.coursesIds = res['coursesIds'];
+      MyApp.mainModel.currentUser.lessonsId = res['lessonsId'];
+      notifyListeners();
+    }
   }
 }

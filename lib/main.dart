@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/home.dart';
@@ -28,8 +29,11 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static final MainModel mainModel = MainModel();
+
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+
     mainModel.autoLogin();
     mainModel.getCourses();
     if (mainModel.currentCourses != null) {

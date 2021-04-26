@@ -12,16 +12,20 @@ class User {
   final String phoneNumber;
   final int points;
   String balance;
+  List<String> coursesIds;
+  List<String> lessonsId;
   User(
       {@required this.firstName,
       @required this.lastName,
       @required this.email,
-      @required this.profileImageUrl,
-      @required this.facultyId,
+      this.profileImageUrl,
+      this.facultyId,
       @required this.phoneNumber,
-      @required this.points,
+      this.points,
       this.id,
       this.deviceId,
       this.balance,
-      this.token});
+      this.token,
+      this.coursesIds,
+      this.lessonsId});
 }

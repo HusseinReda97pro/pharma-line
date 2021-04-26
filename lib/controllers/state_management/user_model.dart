@@ -69,7 +69,7 @@ mixin UserModel on ChangeNotifier {
       facultyId: signedUpUser['faculty'],
       profileImageUrl: signedUpUser['profilePicture'],
     );
-    userController.storeUser(currentUser);
+    userController.storeUser(token: signedUpUser['token']);
   }
 
   Future<dynamic> login({String email, String password}) async {
@@ -80,30 +80,34 @@ mixin UserModel on ChangeNotifier {
     }
     var signedUpUser = res['user'];
     currentUser = User(
-      id: signedUpUser['_id'],
-      token: signedUpUser['token'],
-      phoneNumber: signedUpUser['phoneNumber'],
-      firstName: signedUpUser['firstName'],
-      lastName: signedUpUser['lastName'],
-      email: signedUpUser['email'],
-      points: signedUpUser['points'],
-      balance: signedUpUser['balance'].toString(),
-      deviceId: signedUpUser['deviceId'],
-      facultyId: signedUpUser['faculty'],
-      profileImageUrl: signedUpUser['profilePicture'],
-    );
-    userController.storeUser(currentUser);
+        id: signedUpUser['_id'],
+        token: signedUpUser['token'],
+        phoneNumber: signedUpUser['phoneNumber'],
+        firstName: signedUpUser['firstName'],
+        lastName: signedUpUser['lastName'],
+        email: signedUpUser['email'],
+        points: signedUpUser['points'],
+        balance: signedUpUser['balance'].toString(),
+        deviceId: signedUpUser['deviceId'],
+        facultyId: signedUpUser['faculty'],
+        profileImageUrl: signedUpUser['profilePicture'],
+        coursesIds: [],
+        lessonsId: []);
+    userController.storeUser(token: signedUpUser['token']);
+    MyApp.mainModel.getUserCoursesAndLessons();
+    notifyListeners();
   }
 
   void logout() {
     userController.removeUser();
     currentUser = null;
-    MyApp.mainModel.currentUserCoursesIds.clear();
     notifyListeners();
   }
 
   Future<void> autoLogin() async {
     currentUser = await userController.getStoredUser();
+    MyApp.mainModel.getUserCoursesAndLessons();
+    notifyListeners();
   }
 
   bool loadingHistory = false;

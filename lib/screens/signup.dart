@@ -8,7 +8,6 @@ import 'package:pharma_line/models/faculty.dart';
 import 'package:pharma_line/models/university.dart';
 import 'package:pharma_line/models/user.dart';
 import 'package:pharma_line/screens/home.dart';
-import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/widgets/input.dart';
 import 'package:pharma_line/widgets/loading_box.dart';
 import 'package:provider/provider.dart';

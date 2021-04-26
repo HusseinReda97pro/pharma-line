@@ -47,7 +47,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ),
               ),
               actions: <Widget>[
-                new FlatButton(
+                new ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

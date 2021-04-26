@@ -70,6 +70,7 @@ class UserController {
 
   Future<dynamic> login(String email, String password) async {
     String deviceId = await DeviceToken.getId();
+    print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
     var data = {'email': email, 'password': password, 'deviceId': deviceId};
 
@@ -101,7 +102,6 @@ class UserController {
 
   Future<dynamic> updateUserInfo(
       User user, String password, io.File image, String token) async {
-    String deviceId = await DeviceToken.getId();
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/updateProfile");
     var request = new http.MultipartRequest("POST", postUri);
 
@@ -164,68 +164,75 @@ class UserController {
     }
   }
 
-  Future<void> storeUser(User user) async {
+  Future<void> storeUser({String token}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('id', user.id);
-    prefs.setString('token', user.token);
-    prefs.setString('firstName', user.firstName);
-    prefs.setString('lastName', user.lastName);
-    prefs.setString('email', user.email);
-    prefs.setString('phoneNumber', user.phoneNumber);
-    prefs.setString('deviceId', user.deviceId);
-    prefs.setString('facultyId', user.facultyId);
-    prefs.setInt('points', user.points);
-    prefs.setString('balance', user.balance);
-    prefs.setString("profilePicture", user.profileImageUrl);
+    prefs.setString('token', token);
   }
 
   Future<User> getStoredUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.get('id');
-    if (id == null) {
+    var token = prefs.get('token');
+    if (token == null) {
       return null;
     }
-    var token = prefs.get('token');
-    var firstName = prefs.get('firstName');
-    var lastName = prefs.get('lastName');
-    var email = prefs.get('email');
-    var phoneNumber = prefs.get('phoneNumber');
-    var deviceId = prefs.get('deviceId');
-    var facultyId = prefs.get('facultyId');
-    var points = prefs.get('points');
-    var balance = prefs.get('balance');
-    var imageUrl = prefs.get("profilePicture");
-    User user = User(
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        profileImageUrl: imageUrl,
-        facultyId: facultyId,
-        phoneNumber: phoneNumber,
-        points: points,
-        deviceId: deviceId,
-        token: token,
-        balance: balance,
-        id: id);
-    return user;
+
+    String deviceId = await DeviceToken.getId();
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/student/token-login");
+    var data = {'deviceId': deviceId};
+    print(data);
+
+    try {
+      http.Response response = await http
+          .post(postUri, body: data, headers: {'Authorization': token});
+      if (response.body == 'Unauthorized') {
+        return null;
+      }
+      print(response.body);
+      var body = json.decode(response.body);
+      print(body);
+      if (body['errors'] != null) {
+        return null;
+      }
+      var id = body['_id'];
+
+      var firstName = body['firstName'];
+      var lastName = body['lastName'];
+      var email = body['email'];
+      var phoneNumber = body['phoneNumber'];
+      var deviceId = body['deviceId'];
+      var facultyId = body['faculty'];
+      var points = body['points'];
+      var balance = body['balance'].toString();
+      var imageUrl = body["profilePicture"];
+      User user = User(
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          profileImageUrl: imageUrl,
+          facultyId: facultyId,
+          phoneNumber: phoneNumber,
+          points: points,
+          deviceId: deviceId,
+          token: token,
+          balance: balance,
+          id: id,
+          coursesIds: [],
+          lessonsId: []);
+      return user;
+    } catch (e) {
+      print('auto login error');
+      print(e);
+      return null;
+    }
   }
 
   Future<void> removeUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('id');
     prefs.remove('token');
-    prefs.remove('firstName');
-    prefs.remove('lastName');
-    prefs.remove('email');
-    prefs.remove('phoneNumber');
-    prefs.remove('deviceId');
-    prefs.remove('facultyId');
-    prefs.remove('points');
-    prefs.remove('balance');
   }
 
   Future<List<History>> getHistory(token) async {
-    List<History> Histories = [];
+    List<History> histories = [];
     HistoryStatus userstatus;
     Uri url = Uri.parse(BASIC_URL + '/api/v1/student/myHistory');
     http.Response response = await http
@@ -244,7 +251,7 @@ class UserController {
         } else {
           userstatus = HistoryStatus.SPEND;
         }
-        Histories.add(
+        histories.add(
           History(
               amount: hist['transactionAmout'],
               status: userstatus,
@@ -256,7 +263,7 @@ class UserController {
     } catch (e) {
       print(e);
     }
-    return Histories;
+    return histories;
   }
 
   Future<List<NotificationData>> getNotification(token) async {

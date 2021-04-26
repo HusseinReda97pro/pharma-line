@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pharma_line/config/Palette.dart';
@@ -11,7 +9,6 @@ import 'package:pharma_line/screens/user_info.dart';
 import 'package:pharma_line/screens/wallet.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/app_drawer.dart';
-import 'package:pharma_line/widgets/profile_image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {

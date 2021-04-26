@@ -148,7 +148,6 @@ class CourseCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  model.addCourseId(course.id);
                 },
                 child: Text('Okay'),
               ),
@@ -290,8 +289,26 @@ class CourseCard extends StatelessWidget {
                           )
                         : Container(),
                     //Enroll course
-                    model.currentUserCoursesIds.contains(course.id)
-                        ? Container()
+                    model.currentUser != null
+                        ? model.currentUser.coursesIds.contains(course.id)
+                            ? Container()
+                            : Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _handelEnrollment(
+                                        context: context,
+                                        title: course.title,
+                                        model: model);
+                                  },
+                                  child: Text(
+                                    'Enroll Now',
+                                    style: TextStyle(color: Palette.darkBlue),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Palette.lightBlue),
+                                ),
+                              )
                         : Container(
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
