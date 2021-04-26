@@ -92,9 +92,9 @@ mixin UserModel on ChangeNotifier {
         facultyId: signedUpUser['faculty'],
         profileImageUrl: signedUpUser['profilePicture'],
         coursesIds: [],
-        lessonsId: []);
+        lessonsIds: []);
     userController.storeUser(token: signedUpUser['token']);
-    MyApp.mainModel.getUserCoursesAndLessons();
+    MyApp.mainModel.getUserCourses();
     notifyListeners();
   }
 
@@ -106,7 +106,7 @@ mixin UserModel on ChangeNotifier {
 
   Future<void> autoLogin() async {
     currentUser = await userController.getStoredUser();
-    MyApp.mainModel.getUserCoursesAndLessons();
+    MyApp.mainModel.getUserCourses();
     notifyListeners();
   }
 

@@ -48,6 +48,7 @@ dependencies:
   secure_application: ^3.7.1
   video_player: ^2.1.1
   youtube_explode_dart: ^1.9.1
+  fluttertoast: ^8.0.6
 
 dev_dependencies:
   flutter_test:

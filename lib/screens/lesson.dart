@@ -1,6 +1,8 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
+import 'package:pharma_line/controllers/lesson_controller.dart';
+import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/lesson.dart';
 import 'package:pharma_line/screens/pdf_viewer.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
@@ -8,30 +10,26 @@ import 'package:pharma_line/widgets/app_drawer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LessonScreen extends StatefulWidget {
   final Lesson lesson;
-  LessonScreen({@required this.lesson});
+  final String courseId;
+  LessonScreen({@required this.lesson, @required this.courseId});
 
   @override
   _LessonScreenState createState() => _LessonScreenState();
 }
 
 class _LessonScreenState extends State<LessonScreen> {
-  // YoutubePlayerController _youtubePlayerController;
   ChewieController _chewieController;
   VideoPlayerController _videoPlayerController;
+  List<int> watchedSeconds = [];
+  bool isWatched = false;
 
   @override
   void initState() {
     if (widget.lesson.videoUrl != null) {
-      // _youtubePlayerController = YoutubePlayerController(
-      //   initialVideoId: YoutubePlayer.convertUrlToId(widget.lesson.videoUrl),
-      //   flags: YoutubePlayerFlags(
-      //     autoPlay: false,
-      //   ),
-      // );
-      print('Start');
       initializeVideoPalyer();
     }
     super.initState();
@@ -48,7 +46,6 @@ class _LessonScreenState extends State<LessonScreen> {
 
   Future<void> initializeVideoPalyer() async {
     if (widget.lesson.videoUrl.contains('youtube')) {
-      // var videoId = YoutubePlayer.convertUrlToId(widget.lesson.videoUrl);
       final extractor = YoutubeExplode();
       final videoId = YoutubePlayer.convertUrlToId(widget.lesson.videoUrl);
       final streamManifest =
@@ -79,28 +76,46 @@ class _LessonScreenState extends State<LessonScreen> {
       // ),
       autoInitialize: true,
     );
+    _videoPlayerController.addListener(videoViewership);
     setState(() {});
     print('Done');
   }
-  // @override
-  // void dispose() {
-  //   _youtubePlayerController.dispose();
-  //   super.dispose();
-  // }
 
-  // Widget youtubeHierarchy() {
-  //   return Container(
-  //     child: Align(
-  //       alignment: Alignment.center,
-  //       child: FittedBox(
-  //         fit: BoxFit.fill,
-  //         child: YoutubePlayer(
-  //           controller: _youtubePlayerController,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Future<void> videoViewership() async {
+    if (!watchedSeconds
+        .contains(_videoPlayerController.value.position.inSeconds)) {
+      watchedSeconds.add(_videoPlayerController.value.position.inSeconds);
+    }
+    if (watchedSeconds.length >=
+        _videoPlayerController.value.duration.inSeconds * 0.25) {
+      if (!isWatched) {
+        print('Watched');
+        isWatched = true;
+        int count = await LessonController().updateLessonProgress(
+            token: MyApp.mainModel.currentUser.token,
+            courseId: widget.courseId,
+            lessonId: widget.lesson.id);
+        showCountMessage(count: count);
+      }
+    }
+    print(watchedSeconds.length);
+  }
+
+  void showCountMessage({@required int count}) {
+    if (count != null && count != -1) {
+      Fluttertoast.showToast(
+          msg: 'You consumed ' +
+              count.toString() +
+              (count == 1 ? ' view' : ' views') +
+              ' out of 5',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Color(0xFFCCCCCC),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +197,16 @@ class _LessonScreenState extends State<LessonScreen> {
           )
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Text('+'),
+      //   onPressed: () async {
+      //     int count = await LessonController().updateLessonProgress(
+      //         token: MyApp.mainModel.currentUser.token,
+      //         courseId: widget.courseId,
+      //         lessonId: widget.lesson.id);
+      //     print("count is" + count.toString());
+      //   },
+      // ),
     );
   }
 }

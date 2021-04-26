@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pharma_line/config/Palette.dart';
-import 'package:pharma_line/controllers/course_controller.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/course.dart';
 import 'package:pharma_line/screens/lessons.dart';
@@ -57,7 +56,7 @@ class CourseCard extends StatelessWidget {
                     _handelLogin(context: context);
                   } else {
                     loadingBox(context);
-                    await CourseController().enrollCourse(
+                    await model.enrollCourse(
                         token: model.currentUser.token, courseId: course.id);
                     Navigator.pop(context);
                     _enrollmentMessage(

@@ -27,7 +27,7 @@ class CourseController {
     try {
       http.Response response =
           await http.get(postUri, headers: {'Authorization': token});
-      // print(response.body);
+      print(response.body);
       var body = json.decode(response.body);
 
       return await convertToCourses(body);
@@ -58,27 +58,27 @@ class CourseController {
   Future<List<Course>> convertToCourses(body) async {
     List<Course> courses = [];
     for (var course in body) {
-      try {
-        courses.add(
-          Course(
-              id: course['_id'],
-              title: course['title'],
-              description: course['description'],
-              imageUrl: course['imageUrl'],
-              teacher: course['teacher']['firstName'] +
-                  " " +
-                  course['teacher']['lastName'],
-              // course['teacher']['firstName'] +
-              //     course['teacher']['lastName'],
-              label: course['label'],
-              faculty: '',
-              university: '',
-              isLive: false),
-        );
-      } catch (e) {
-        print('Add Course Error');
-        print(e);
-      }
+      // try {
+      courses.add(
+        Course(
+            id: course['_id'],
+            title: course['title'],
+            description: course['description'],
+            imageUrl: course['imageUrl'],
+            teacher: course['teacher']['firstName'] +
+                " " +
+                course['teacher']['lastName'],
+            // course['teacher']['firstName'] +
+            //     course['teacher']['lastName'],
+            label: course['label'],
+            faculty: '',
+            university: '',
+            isLive: false),
+      );
+      // } catch (e) {
+      //   print('Add Course Error');
+      //   print(e);
+      // }
     }
     print(courses.length);
     return courses;
@@ -92,33 +92,26 @@ class CourseController {
     print(response.body);
   }
 
-  Future<dynamic> getUserCoursesAndLessons({@required String token}) async {
+  Future<List<String>> getUserCourses({@required String token}) async {
     Uri url = Uri.parse(BASIC_URL + '/api/v1/student/mycourses');
     http.Response response =
         await http.get(url, headers: {'Authorization': token});
-    print(response.body);
+    // print(response.body);
     try {
       List<String> coursesIds = [];
-      List<String> lessonsIds = [];
 
       var body = json.decode(response.body);
       for (var course in body) {
         try {
           coursesIds.add(course['_id']);
-          for (var lesson in course['lessons']) {
-            try {
-              lessonsIds.add(lesson['_id']);
-            } catch (_) {}
-          }
         } catch (_) {}
       }
-      print(coursesIds);
-      print(lessonsIds);
-      return {'coursesIds': coursesIds, 'lessonsIds': lessonsIds};
+
+      return coursesIds;
     } catch (e) {
       print('get user courses and lessons ids Error:');
       print(e);
-      return {'coursesIds': [], 'lessonsIds': []};
+      return [];
     }
   }
 }

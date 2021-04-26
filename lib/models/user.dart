@@ -13,7 +13,7 @@ class User {
   final int points;
   String balance;
   List<String> coursesIds;
-  List<String> lessonsId;
+  List<String> lessonsIds;
   User(
       {@required this.firstName,
       @required this.lastName,
@@ -27,5 +27,5 @@ class User {
       this.balance,
       this.token,
       this.coursesIds,
-      this.lessonsId});
+      this.lessonsIds});
 }

@@ -49,7 +49,9 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: Palette.lightBlue,
                 ),
                 onPressed: () {
-                  model.getNotification();
+                  if (model.currentUser != null) {
+                    model.getNotification();
+                  }
                   Navigator.pushNamed(context, NotificationsScreen.route);
                 }),
           ],

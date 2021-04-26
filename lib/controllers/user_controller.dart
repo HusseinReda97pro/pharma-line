@@ -217,7 +217,7 @@ class UserController {
           balance: balance,
           id: id,
           coursesIds: [],
-          lessonsId: []);
+          lessonsIds: []);
       return user;
     } catch (e) {
       print('auto login error');

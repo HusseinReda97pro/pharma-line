@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/lesson_controller.dart';
+import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/lesson.dart';
 import 'package:pharma_line/screens/lesson.dart';
 import 'package:pharma_line/screens/login.dart';
+import 'package:provider/provider.dart';
 
 import 'loading_box.dart';
 
@@ -31,7 +33,10 @@ class LessonCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return LessonScreen(lesson: res['lesson']);
+              return LessonScreen(
+                lesson: res['lesson'],
+                courseId: courseId,
+              );
             },
           ),
         );
@@ -61,14 +66,24 @@ class LessonCard extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  if (error != 'Not enough balance.') {
+                  if (!(error == 'Not enough balance.' ||
+                      error == "You've Reached The Maximum Watching Number" ||
+                      error == 'You Should Enroll The Course First')) {
                     _handelEnrollment(context: context);
                   } else {
                     Navigator.pop(context);
+                    if (error == 'You Should Enroll The Course First') {
+                      Navigator.pop(context);
+                    }
                   }
                 },
                 child: Text(
-                  error == 'Not enough balance.' ? 'okay' : 'Enroll Now',
+                  (error == 'Not enough balance.' ||
+                          error ==
+                              "You've Reached The Maximum Watching Number" ||
+                          error == 'You Should Enroll The Course First')
+                      ? 'okay'
+                      : 'Enroll Now',
                   textAlign: TextAlign.center,
                 ))
           ],
@@ -86,7 +101,7 @@ class LessonCard extends StatelessWidget {
             title: Container(child: new Text('Enrollment')),
             content: Container(
               height: 80,
-              child: Column(
+              child: ListView(
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width * 0.7,
@@ -116,10 +131,8 @@ class LessonCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
                 onPressed: () async {
                   loadingBox(context);
-                  var res = await LessonController().enrollInLesson(
-                      token: MyApp.mainModel.currentUser.token,
-                      courseId: courseId,
-                      lessonId: lesson.id);
+                  var res = await MyApp.mainModel
+                      .enrollInLesson(courseId: courseId, lessonId: lesson.id);
                   Navigator.pop(context);
                   if (res['error'] != null) {
                     _showErrors(context, res['error']);
@@ -175,7 +188,10 @@ class LessonCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return LessonScreen(lesson: res['lesson']);
+                        return LessonScreen(
+                          lesson: res['lesson'],
+                          courseId: courseId,
+                        );
                       },
                     ),
                   );
@@ -233,76 +249,110 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print('lesson id" ' + lesson.id);
-        print('course id" ' + courseId);
-        _handelOpenLesson(context: context);
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.05),
-        child: Card(
-          color: Palette.midBlue,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Container(
-            margin: EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                lesson.imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Image.network(
-                          lesson.imageUrl,
+    return Consumer<MainModel>(
+        builder: (BuildContext context, MainModel model, Widget child) {
+      return GestureDetector(
+        onTap: () {
+          print('lesson id" ' + lesson.id);
+          print('course id" ' + courseId);
+          _handelOpenLesson(context: context);
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.05),
+          child: Card(
+            color: Palette.midBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Container(
+              margin: EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  lesson.imageUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.network(
+                            lesson.imageUrl,
+                          ),
+                        )
+                      : Container(),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        margin: EdgeInsets.all(8.0),
+                        child: Text(
+                          lesson.title,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w400),
                         ),
-                      )
-                    : Container(),
-                Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      margin: EdgeInsets.all(8.0),
-                      child: Text(
-                        lesson.title,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w400),
                       ),
-                    ),
-                    Expanded(child: SizedBox()),
-                    Container(
-                      // margin: EdgeInsets.all(8.0),
-                      width: MediaQuery.of(context).size.width * 0.15,
-                      child: Text(
-                        lesson.price.toString() + " EGP",
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400),
+                      Expanded(child: SizedBox()),
+                      Container(
+                        // margin: EdgeInsets.all(8.0),
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        child: Text(
+                          lesson.price.toString() + " EGP",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    lesson.description,
-                    softWrap: true,
-                    style: TextStyle(
-                        color: Color(0xFFCCCCCC),
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w400),
+                    ],
                   ),
-                ),
-              ],
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      lesson.description,
+                      softWrap: true,
+                      style: TextStyle(
+                          color: Color(0xFFCCCCCC),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                  model.currentUser != null
+                      ? model.currentUser.lessonsIds.contains(lesson.id)
+                          ? Container()
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _handelOpenLesson(context: context);
+                                },
+                                child: Text(
+                                  'Enroll Now',
+                                  style: TextStyle(color: Palette.darkBlue),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Palette.lightBlue),
+                              ),
+                            )
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _handelOpenLesson(context: context);
+                            },
+                            child: Text(
+                              'Enroll Now',
+                              style: TextStyle(color: Palette.darkBlue),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                primary: Palette.lightBlue),
+                          ),
+                        )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
