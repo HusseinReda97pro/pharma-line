@@ -101,18 +101,20 @@ class LessonCard extends StatelessWidget {
             title: Container(child: new Text('Enrollment')),
             content: Container(
               height: 80,
-              child: ListView(
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: Text(
-                      "Do you want to sepnd " +
-                          lesson.price.toString() +
-                          " EGP for Enrollong in lesson: " +
-                          lesson.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                        "Do you want to sepnd " +
+                            lesson.price.toString() +
+                            " EGP for Enrollong in lesson: " +
+                            lesson.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
