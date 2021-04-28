@@ -57,18 +57,19 @@ mixin UserModel on ChangeNotifier {
     }
     var signedUpUser = res['user'];
     currentUser = User(
-      id: signedUpUser['_id'],
-      token: signedUpUser['token'],
-      phoneNumber: signedUpUser['phoneNumber'],
-      firstName: signedUpUser['firstName'],
-      lastName: signedUpUser['lastName'],
-      email: signedUpUser['email'],
-      points: signedUpUser['points'],
-      balance: signedUpUser['balance'].toString(),
-      deviceId: signedUpUser['deviceId'],
-      facultyId: signedUpUser['faculty'],
-      profileImageUrl: signedUpUser['profilePicture'],
-    );
+        id: signedUpUser['_id'],
+        token: signedUpUser['token'],
+        phoneNumber: signedUpUser['phoneNumber'],
+        firstName: signedUpUser['firstName'],
+        lastName: signedUpUser['lastName'],
+        email: signedUpUser['email'],
+        points: signedUpUser['points'],
+        balance: signedUpUser['balance'].toString(),
+        deviceId: signedUpUser['deviceId'],
+        facultyId: signedUpUser['faculty'],
+        profileImageUrl: signedUpUser['profilePicture'],
+        coursesIds: [],
+        lessonsIds: []);
     userController.storeUser(token: signedUpUser['token']);
   }
 

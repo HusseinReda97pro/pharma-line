@@ -16,6 +16,7 @@ import 'device_token.dart';
 class UserController {
   Future<dynamic> signUp(User user, String password, io.File image) async {
     String deviceId = await DeviceToken.getId();
+    print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/signup");
     var request = new http.MultipartRequest("POST", postUri);
 
@@ -32,21 +33,25 @@ class UserController {
     //   await image.readAsBytes(),
     // ));
     // open a bytestream
-    var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
-    // get file length
-    var length = await image.length();
+    if (image != null) {
+      var stream =
+          new http.ByteStream(DelegatingStream.typed(image.openRead()));
+      // get file length
+      var length = await image.length();
 
-    // multipart that takes file
-    var multipartFile = new http.MultipartFile('profilePicture', stream, length,
-        filename: basename(image.path));
+      // multipart that takes file
+      var multipartFile = new http.MultipartFile(
+          'profilePicture', stream, length,
+          filename: basename(image.path));
 
-    // add file to multipart
-    request.files.add(multipartFile);
-
+      // add file to multipart
+      request.files.add(multipartFile);
+    }
     try {
       var response = await request.send();
       final res = await http.Response.fromStream(response);
       var body = json.decode(res.body);
+      print(body);
 
       if (body['errors'] != null) {
         List<String> errors = [];
@@ -56,8 +61,10 @@ class UserController {
         return {'errors': errors};
       }
       if (body['message'] != null) {
+        print(body['message']);
+
         return {
-          'errors': ['something went wrong']
+          'errors': [body['message'].toString()]
         };
       }
       return {'user': body};

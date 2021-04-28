@@ -11,6 +11,7 @@ class UniversityController {
     Uri url = Uri.parse(BASIC_URL + '/api/v1/universities');
     http.Response response = await http.get(url);
     var data = json.decode(response.body);
+    print(data);
     try {
       for (var uni in data) {
         List<Faculty> faculties = [];

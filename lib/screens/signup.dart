@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   File image;
   University selectedUniversity;
   Faculty selectedFaculty;
@@ -243,6 +244,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: passwordController,
                 obscureText: true,
               ),
+              Input(
+                hint: 'Confirm Password',
+                controller: confirmPasswordController,
+                obscureText: true,
+              ),
               Container(
                 margin: EdgeInsets.symmetric(
                     vertical: 5.0,
@@ -328,29 +334,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Palette.lightBlue),
                   onPressed: () async {
-                    if (emailController.text.isNotEmpty &&
-                        firstNameController.text.isNotEmpty &&
-                        lastNameController.text.isNotEmpty &&
-                        phoneNumberController.text.isNotEmpty &&
-                        passwordController.text.isNotEmpty &&
-                        selectedFaculty != null &&
-                        image != null) {
-                      loadingBox(context);
-                      User user = User(
-                          email: emailController.text.trim(),
-                          facultyId: selectedFaculty.id,
-                          firstName: firstNameController.text.trim(),
-                          lastName: lastNameController.text.trim(),
-                          phoneNumber: phoneNumberController.text.trim());
-                      var res = await model.signUp(
-                          user: user,
-                          password: passwordController.text,
-                          image: image);
-                      Navigator.pop(context);
-                      if (res != null) {
-                        _showErrors(context, res['errors']);
-                      } else {
-                        _signedUpSuccessfully(context);
+                    List<String> errors = [];
+                    if (emailController.text.isEmpty) {
+                      errors.add('Email is required.');
+                    }
+                    if (firstNameController.text.isEmpty) {
+                      errors.add('First Name is required.');
+                    }
+                    if (lastNameController.text.isEmpty) {
+                      errors.add('Last Name is required.');
+                    }
+                    if (phoneNumberController.text.isEmpty) {
+                      errors.add('Phone Number is required.');
+                    }
+
+                    if (passwordController.text.isEmpty) {
+                      errors.add('Password is required.');
+                    }
+                    if (confirmPasswordController.text.isEmpty) {
+                      errors.add('Confrim Password is required.');
+                    }
+                    if ((confirmPasswordController.text.isNotEmpty &&
+                            passwordController.text.isNotEmpty) &&
+                        passwordController.text !=
+                            confirmPasswordController.text) {
+                      errors.add('passwords don\'t match.');
+                    }
+                    if (selectedFaculty == null) {
+                      errors.add('Faculty is required.');
+                    }
+
+                    if (errors.length > 0) {
+                      _showErrors(context, errors);
+                    } else {
+                      if (emailController.text.isNotEmpty &&
+                          firstNameController.text.isNotEmpty &&
+                          lastNameController.text.isNotEmpty &&
+                          phoneNumberController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty &&
+                          selectedFaculty != null) {
+                        loadingBox(context);
+                        User user = User(
+                            email: emailController.text.trim(),
+                            facultyId: selectedFaculty.id,
+                            firstName: firstNameController.text.trim(),
+                            lastName: lastNameController.text.trim(),
+                            phoneNumber: phoneNumberController.text.trim());
+                        var res = await model.signUp(
+                            user: user,
+                            password: passwordController.text,
+                            image: image);
+                        Navigator.pop(context);
+                        if (res != null) {
+                          _showErrors(context, res['errors']);
+                        } else {
+                          _signedUpSuccessfully(context);
+                        }
                       }
                     }
                   },
@@ -360,9 +399,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: 100),
             ],
           ),
         ),
+        // floatingActionButton: FloatingActionButton(
+        //   child: Text('+'),
+        //   onPressed: () {
+        //     print(model.universities);
+        //   },
+        // ),
       );
     }));
   }

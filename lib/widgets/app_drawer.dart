@@ -113,6 +113,7 @@ class AppDrawer extends StatelessWidget {
                         title: 'Signup',
                         icon: Icons.person_add,
                         onPressed: () {
+                          model.getUniversities();
                           _navigeteToPage(context, SignUpScreen.route);
                         },
                       )
