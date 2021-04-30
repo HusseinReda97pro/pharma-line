@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/signup.dart';
 import 'package:pharma_line/widgets/input.dart';
@@ -16,6 +17,24 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  int _radioGroup = 1;
+
+  Future<void> _login(
+      {@required BuildContext context, @required MainModel model}) async {
+    loadingBox(context);
+    var res = await model.login(
+        email: emailController.text.trim(), password: passwordController.text);
+    Navigator.pop(context);
+    if (res != null) {
+      _showErrors(context, res['errors']);
+    } else {
+      if (model.currentUserType == UserType.TEACHER) {
+        model.getTeacherCourses(token: model.currentUser.token);
+      }
+      Navigator.popUntil(context, ModalRoute.withName(HomeScreen.route));
+    }
+  }
+
   Future<void> _showErrors(BuildContext context, List<String> errors) async {
     return showDialog<void>(
       context: context,
@@ -93,6 +112,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 5.0,
                   ),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Student',
+                        style:
+                            TextStyle(fontSize: 16, color: Palette.lightBlue),
+                      ),
+                      Radio(
+                        value:
+                            model.currentUserType == UserType.STUDENT ? 1 : 0,
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => Palette.lightBlue),
+                        groupValue: _radioGroup,
+                        onChanged: (_) {
+                          setState(() {
+                            model.currentUserType = UserType.STUDENT;
+                          });
+                        },
+                      ),
+                      Radio(
+                        value:
+                            model.currentUserType == UserType.TEACHER ? 1 : 0,
+                        activeColor: Palette.lightBlue,
+                        hoverColor: Colors.red,
+                        groupValue: _radioGroup,
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => Palette.lightBlue),
+                        onChanged: (_) {
+                          setState(() {
+                            model.currentUserType = UserType.TEACHER;
+                          });
+                        },
+                      ),
+                      Text(
+                        'Teachr',
+                        style:
+                            TextStyle(fontSize: 16, color: Palette.lightBlue),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
                   Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: MediaQuery.of(context).size.width * 0.05),
@@ -107,17 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       onPressed: () async {
-                        loadingBox(context);
-                        var res = await model.login(
-                            email: emailController.text.trim(),
-                            password: passwordController.text);
-                        Navigator.pop(context);
-                        if (res != null) {
-                          _showErrors(context, res['errors']);
-                        } else {
-                          Navigator.popUntil(
-                              context, ModalRoute.withName(HomeScreen.route));
-                        }
+                        _login(context: context, model: model);
                       },
                       child: Text(
                         'Login',

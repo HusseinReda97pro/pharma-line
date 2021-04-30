@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/screens/notifications.dart';
 import 'package:pharma_line/screens/search.dart';
 import 'package:pharma_line/widgets/rounded_button.dart';
@@ -31,29 +32,33 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: SizedBox(),
             ),
-            RoundedButton(
-                backgroundColor: Palette.midBlue,
-                icon: Icon(
-                  Icons.search,
-                  color: Palette.lightBlue,
-                ),
-                onPressed: () {
-                  model.getUniversities();
-                  model.currentCourses.clear();
-                  Navigator.pushNamed(context, SearchScreen.route);
-                }),
-            RoundedButton(
-                backgroundColor: Palette.midBlue,
-                icon: Icon(
-                  Icons.notifications,
-                  color: Palette.lightBlue,
-                ),
-                onPressed: () {
-                  if (model.currentUser != null) {
-                    model.getNotification();
-                  }
-                  Navigator.pushNamed(context, NotificationsScreen.route);
-                }),
+            model.currentUserType == UserType.TEACHER
+                ? Container()
+                : RoundedButton(
+                    backgroundColor: Palette.midBlue,
+                    icon: Icon(
+                      Icons.search,
+                      color: Palette.lightBlue,
+                    ),
+                    onPressed: () {
+                      model.getUniversities();
+                      model.currentCourses.clear();
+                      Navigator.pushNamed(context, SearchScreen.route);
+                    }),
+            model.currentUserType == UserType.TEACHER
+                ? Container()
+                : RoundedButton(
+                    backgroundColor: Palette.midBlue,
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Palette.lightBlue,
+                    ),
+                    onPressed: () {
+                      if (model.currentUser != null) {
+                        model.getNotification();
+                      }
+                      Navigator.pushNamed(context, NotificationsScreen.route);
+                    }),
           ],
         ),
       );

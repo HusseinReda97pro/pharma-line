@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
@@ -67,8 +68,10 @@ class AppDrawer extends StatelessWidget {
                     _navigeteToPage(context, HomeScreen.route);
                   },
                 ),
-                model.currentUser != null
-                    ? _listTile(
+                (model.currentUser == null ||
+                        model.currentUserType == UserType.TEACHER)
+                    ? Container()
+                    : _listTile(
                         context: context,
                         title: 'My Courses',
                         icon: Icons.book,
@@ -77,9 +80,9 @@ class AppDrawer extends StatelessWidget {
                           model.getMyCourses(token: model.currentUser.token);
                           _navigeteToPage(context, MyCoursesScreen.route);
                         },
-                      )
-                    : Container(),
-                model.currentUser == null
+                      ),
+                (model.currentUser == null ||
+                        model.currentUserType == UserType.TEACHER)
                     ? Container()
                     : _listTile(
                         context: context,

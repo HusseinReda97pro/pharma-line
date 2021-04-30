@@ -146,4 +146,19 @@ class LessonController {
     }
     return lessons;
   }
+
+  Future<List<Lesson>> getTeacherLessons(courseId, token) async {
+    var uri = Uri.parse(
+        BASIC_URL + "/api/v1/teacher/myCourses/lessons?courseId=$courseId");
+    try {
+      var response = await get(uri, headers: {'Authorization': token});
+
+      var body = json.decode(response.body);
+
+      return await convertToLesson(body);
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

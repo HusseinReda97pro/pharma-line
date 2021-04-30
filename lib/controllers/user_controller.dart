@@ -47,10 +47,13 @@ class UserController {
       // add file to multipart
       request.files.add(multipartFile);
     }
+    print(request.files);
+
     try {
       var response = await request.send();
       final res = await http.Response.fromStream(response);
       var body = json.decode(res.body);
+      print('signup body');
       print(body);
 
       if (body['errors'] != null) {
@@ -69,6 +72,7 @@ class UserController {
       }
       return {'user': body};
     } catch (e) {
+      print('signup error' + e.toString());
       return {
         'errors': ['something went wrong']
       };
@@ -101,6 +105,37 @@ class UserController {
       return {'user': body};
     } catch (e) {
       print(e);
+      return {
+        'errors': ['something went wrong']
+      };
+    }
+  }
+
+  Future<dynamic> loginTeatcher(String email, String password) async {
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/teacher/login");
+    var data = {'email': email, 'password': password};
+
+    try {
+      http.Response response = await http.post(postUri, body: data);
+      if (response.body == 'Unauthorized') {
+        return {
+          'errors': ['Unauthorized']
+        };
+      }
+      var body = json.decode(response.body);
+      print('teacher login: ');
+      print(body);
+      if (body['errors'] != null) {
+        List<String> errors = [];
+        for (var error in body['errors'].values) {
+          errors.add(error['message']);
+        }
+        return {'errors': errors};
+      }
+
+      return {'user': body};
+    } catch (e) {
+      // print(e);
       return {
         'errors': ['something went wrong']
       };
@@ -274,7 +309,7 @@ class UserController {
   }
 
   Future<List<NotificationData>> getNotification(token) async {
-    List<NotificationData> Notification = [];
+    List<NotificationData> notifications = [];
     //String lessontatus;
     Uri url = Uri.parse(BASIC_URL + '/api/v1/student/myNotifications');
     http.Response response = await http
@@ -283,7 +318,7 @@ class UserController {
 
     try {
       for (var notifcation in data) {
-        Notification.add(NotificationData(
+        notifications.add(NotificationData(
             title: notifcation['title'],
             isLive: notifcation['isLive'],
             category: notifcation['label'],
@@ -292,6 +327,6 @@ class UserController {
     } catch (e) {
       print(e);
     }
-    return Notification;
+    return notifications;
   }
 }

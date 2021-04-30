@@ -4,6 +4,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/course.dart';
+import 'package:pharma_line/models/user_type.dart';
+import 'package:pharma_line/screens/course_students.dart';
 import 'package:pharma_line/screens/lessons.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:provider/provider.dart';
@@ -161,7 +163,12 @@ class CourseCard extends StatelessWidget {
       builder: (BuildContext context, MainModel model, Widget child) {
         return GestureDetector(
           onTap: () {
-            model.getLessons(courseId: course.id);
+            if (model.currentUser != null &&
+                model.currentUserType == UserType.TEACHER) {
+              model.getTeacherLessons(courseId: course.id);
+            } else {
+              model.getLessons(courseId: course.id);
+            }
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -289,25 +296,47 @@ class CourseCard extends StatelessWidget {
                         : Container(),
                     //Enroll course
                     model.currentUser != null
-                        ? model.currentUser.coursesIds.contains(course.id)
+                        ? (model.currentUser.coursesIds.contains(course.id) &&
+                                model.currentUserType == UserType.STUDENT)
                             ? Container()
-                            : Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _handelEnrollment(
-                                        context: context,
-                                        title: course.title,
-                                        model: model);
-                                  },
-                                  child: Text(
-                                    'Enroll Now',
-                                    style: TextStyle(color: Palette.darkBlue),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Palette.lightBlue),
-                                ),
-                              )
+                            : model.currentUserType == UserType.STUDENT
+                                ? Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        _handelEnrollment(
+                                            context: context,
+                                            title: course.title,
+                                            model: model);
+                                      },
+                                      child: Text(
+                                        'Enroll Now',
+                                        style:
+                                            TextStyle(color: Palette.darkBlue),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Palette.lightBlue),
+                                    ),
+                                  )
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        model.getCourseStudents(
+                                            token: model.currentUser.token,
+                                            courseId: course.id);
+                                        Navigator.pushNamed(
+                                            context, CourseStudents.route);
+                                      },
+                                      child: Text(
+                                        'Show Course Students',
+                                        style:
+                                            TextStyle(color: Palette.darkBlue),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Palette.lightBlue),
+                                    ),
+                                  )
                         : Container(
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(

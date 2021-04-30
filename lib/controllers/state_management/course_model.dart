@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/course_controller.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/course.dart';
+import 'package:pharma_line/models/user_type.dart';
 
 mixin CourseModel on ChangeNotifier {
   CourseController courseController = CourseController();
@@ -53,5 +54,16 @@ mixin CourseModel on ChangeNotifier {
       MyApp.mainModel.currentUser.coursesIds.add(courseId);
       notifyListeners();
     }
+  }
+
+  Future<void> getTeacherCourses({@required String token}) async {
+    loadingCourses = true;
+    notifyListeners();
+    // if (MyApp.mainModel.currentUser != null &&
+    //     MyApp.mainModel.currentUserType == UserType.TEACHER) {
+    homeCourses = await courseController.getTeacerCourses(token: token);
+    // }
+    loadingCourses = false;
+    notifyListeners();
   }
 }

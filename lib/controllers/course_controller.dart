@@ -114,4 +114,20 @@ class CourseController {
       return [];
     }
   }
+
+// for teacher
+  Future<List<Course>> getTeacerCourses({@required String token}) async {
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/teacher/myCourses");
+    try {
+      http.Response response =
+          await http.get(postUri, headers: {'Authorization': token});
+      print(response.body);
+      var body = json.decode(response.body);
+      print(body);
+      return await convertToCourses(body);
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

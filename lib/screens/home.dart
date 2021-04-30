@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/user_type.dart';
+import 'package:pharma_line/screens/course_students.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/course_card.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: model.homeCourses.length + 2,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 0) {
-                          return model.currentUser == null
+                          return (model.currentUser == null ||
+                                  model.currentUserType == UserType.TEACHER)
                               ? Container()
                               : Container(
                                   margin: EdgeInsets.all(25.0),
@@ -97,7 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
         // floatingActionButton: FloatingActionButton(
         //   child: Icon(Icons.ac_unit),
         //   onPressed: () {
-        //     model.getUserCoursesAndLessons();
+        //     var token =
+        //         'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgyNjdjZjNkZWEwOTAwMWM0OTVmMzciLCJpYXQiOjE2MTk3ODI4MjN9.7Q5bdgXW7QRun8GeJebKDQOdQLWIjNahq5v_gSDZN7g';
+
+        //     model.getCourseStudents(
+        //         token: token, courseId: '60826d279d5e54001ceb0e1b');
+        //     Navigator.pushNamed(context, CourseStudents.route);
         //   },
         // ),
       );

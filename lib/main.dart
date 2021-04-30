@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/user_type.dart';
+import 'package:pharma_line/screens/course_students.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
@@ -33,10 +35,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-
     mainModel.autoLogin();
-    mainModel.getCourses();
-    if (mainModel.currentCourses != null) {
+    if (mainModel.currentCourses != null &&
+        mainModel.currentUserType == UserType.STUDENT) {
+      mainModel.getCourses();
+    }
+    if (mainModel.currentCourses != null &&
+        mainModel.currentUserType == UserType.STUDENT) {
       try {
         mainModel.getMyCourses(token: mainModel.currentUser.token);
       } catch (_) {}
@@ -59,6 +64,7 @@ class MyApp extends StatelessWidget {
           ScheduleScreen.route: (BuildContext context) => ScheduleScreen(),
           MyCoursesScreen.route: (BuildContext context) => MyCoursesScreen(),
           SignUpScreen.route: (BuildContext context) => SignUpScreen(),
+          CourseStudents.route: (BuildContext context) => CourseStudents(),
         },
       ),
     );

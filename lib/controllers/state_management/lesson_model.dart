@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/lesson.dart';
+import 'package:pharma_line/models/user_type.dart';
 
 import '../lesson_controller.dart';
 
@@ -34,5 +35,17 @@ mixin LessonModel on ChangeNotifier {
       }
       return res;
     }
+  }
+
+  Future<void> getTeacherLessons({String courseId}) async {
+    loadingLessons = true;
+    notifyListeners();
+    if (MyApp.mainModel.currentUser != null &&
+        MyApp.mainModel.currentUserType == UserType.TEACHER) {
+      currentLessons = await lessonController.getTeacherLessons(
+          courseId, MyApp.mainModel.currentUser.token);
+    }
+    loadingLessons = false;
+    notifyListeners();
   }
 }

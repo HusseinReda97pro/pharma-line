@@ -5,9 +5,11 @@ import 'package:pharma_line/controllers/user_controller.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/history.dart';
 import 'package:pharma_line/models/user.dart';
+import 'package:pharma_line/models/user_type.dart';
 
 mixin UserModel on ChangeNotifier {
   User currentUser;
+  UserType currentUserType = UserType.STUDENT;
   // = User(
   //     firstName: 'Abdo',
   //     lastName: 'ragb',
@@ -74,7 +76,14 @@ mixin UserModel on ChangeNotifier {
   }
 
   Future<dynamic> login({String email, String password}) async {
-    var res = await userController.login(email, password);
+    var res;
+    print(currentUserType);
+    if (currentUserType == UserType.STUDENT) {
+      res = await userController.login(email, password);
+    }
+    if (currentUserType == UserType.TEACHER) {
+      res = await userController.loginTeatcher(email, password);
+    }
     print(res);
     if (res['errors'] != null) {
       return res;

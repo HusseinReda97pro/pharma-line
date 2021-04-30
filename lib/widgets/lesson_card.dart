@@ -4,6 +4,7 @@ import 'package:pharma_line/controllers/lesson_controller.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/lesson.dart';
+import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/screens/lesson.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:provider/provider.dart';
@@ -319,13 +320,17 @@ class LessonCard extends StatelessWidget {
                     ),
                   ),
                   model.currentUser != null
-                      ? model.currentUser.lessonsIds.contains(lesson.id)
+                      ? (model.currentUser.lessonsIds.contains(lesson.id) ||
+                              model.currentUserType == UserType.TEACHER)
                           ? Container()
                           : Container(
                               width: MediaQuery.of(context).size.width,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  _handelOpenLesson(context: context);
+                                  if (model.currentUserType !=
+                                      UserType.TEACHER) {
+                                    _handelOpenLesson(context: context);
+                                  }
                                 },
                                 child: Text(
                                   'Enroll Now',
