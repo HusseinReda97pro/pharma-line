@@ -276,9 +276,13 @@ class LessonCard extends StatelessWidget {
                   lesson.imageUrl != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.network(
-                            lesson.imageUrl,
+                          child: FadeInImage.assetNetwork(
+                            placeholder: 'assets/images/placeholder.jpg',
+                            image: lesson.imageUrl,
                           ),
+                          // Image.network(
+                          //   lesson.imageUrl,
+                          // ),
                         )
                       : Container(),
                   Row(

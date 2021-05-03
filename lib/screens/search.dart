@@ -4,9 +4,8 @@ import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/faculty.dart';
 import 'package:pharma_line/models/university.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
-import 'package:pharma_line/widgets/course_card.dart';
-
 import 'package:pharma_line/widgets/app_drawer.dart';
+import 'package:pharma_line/widgets/course_card.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -76,6 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   onChanged: (university) {
                                     print(university);
                                     setState(() {
+                                      selectedFaculty = null;
                                       selectedUniversity = university;
                                     });
                                   },
@@ -137,6 +137,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                         ],
                       ),
+                    );
+                  }
+                  if (model.currentCourses.length == 0) {
+                    return Text(
+                      'there are no courses for selected faculty.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
                     );
                   }
                   if (index == model.currentCourses.length + 1) {

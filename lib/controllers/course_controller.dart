@@ -13,7 +13,7 @@ class CourseController {
       http.Response response = await http.get(
         postUri,
       );
-      // print(response.body);
+      print(response.body);
       var body = json.decode(response.body);
 
       return await convertToCourses(body);
@@ -59,7 +59,7 @@ class CourseController {
   Future<List<Course>> convertToCourses(body) async {
     List<Course> courses = [];
     for (var course in body) {
-      // try {
+      try {
       courses.add(
         Course(
             id: course['_id'],
@@ -76,10 +76,10 @@ class CourseController {
             university: '',
             isLive: false),
       );
-      // } catch (e) {
-      //   print('Add Course Error');
-      //   print(e);
-      // }
+      } catch (e) {
+        print('Add Course Error');
+        print(e);
+      }
     }
     print(courses.length);
     return courses;
@@ -101,7 +101,7 @@ class CourseController {
     Uri url = Uri.parse(BASIC_URL + '/api/v1/student/mycourses');
     http.Response response =
         await http.get(url, headers: {'Authorization': token});
-    // print(response.body);
+    print(response.body);
     try {
       List<String> coursesIds = [];
 

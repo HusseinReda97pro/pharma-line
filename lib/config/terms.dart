@@ -1,4 +1,4 @@
-const String terms = '<div id="product-col-2" class="category-wrapper fr">
+const String terms = '''<div id="product-col-2" class="category-wrapper fr">
 
             <p>These terms and conditions govern the way in which we supply products to you, including any eLearning courses.</p>
             <p>Please read these terms carefully before you submit your order to us. These terms tell you who we are, how we will provide products to you, how you and we may change or end the contract, what to do if there is a problem and other important information. All rights not expressly granted in these terms are hereby reserved.</p>
@@ -158,4 +158,4 @@ const String terms = '<div id="product-col-2" class="category-wrapper fr">
             <p>These terms are governed by and construed in accordance with the laws of England and Wales and you can bring legal proceedings in the English courts. If you live in Scotland, you can bring legal proceedings in either the Scottish or English courts. If you live in Northern Ireland, you can bring legal proceedings in respect of the products in either the Northern Irish or the English courts. </p>
             <p>This was last updated in April 2020.</p>
 
-        </div>';
+        </div>''';

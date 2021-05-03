@@ -193,10 +193,15 @@ class CourseCard extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
-                      child: Image.network(
-                        course.imageUrl,
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/images/placeholder.jpg',
+                        image: course.imageUrl,
                       ),
                     ),
+                    //   Image.network(
+                    //     course.imageUrl,
+                    //   ),
+                    // ),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 5.0),
                       child: Text(
@@ -224,6 +229,7 @@ class CourseCard extends StatelessWidget {
                         Expanded(child: SizedBox()),
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          width: 80.0,
                           padding: EdgeInsets.all(5.0),
                           decoration: BoxDecoration(
                             color: Palette.darkBlue,
@@ -234,12 +240,18 @@ class CourseCard extends StatelessWidget {
                               color: Palette.lightBlue,
                             ),
                           ),
-                          child: Text(
-                            course.label,
-                            style: TextStyle(
-                                color: Palette.lightBlue,
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w400),
+                          child: Center(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                course.label,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Palette.lightBlue,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
                           ),
                         ),
                         course.isLive

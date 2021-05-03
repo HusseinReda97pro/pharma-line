@@ -44,11 +44,13 @@ dependencies:
   flutter_cached_pdfview: ^0.4.0-nullsafety
   chewie: ^1.0.0
   flutter_launcher_icons: ^0.9.0
-  flutter_windowmanager: ^0.0.2
+  # flutter_windowmanager: ^0.0.2
   secure_application: ^3.7.1
   video_player: ^2.1.1
   youtube_explode_dart: ^1.9.1
   fluttertoast: ^8.0.6
+  battery: ^2.0.1
+  flutter_html: ^2.0.0-nullsafety.1
 
 dev_dependencies:
   flutter_test:

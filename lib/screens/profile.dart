@@ -4,7 +4,6 @@ import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/notifications.dart';
-import 'package:pharma_line/screens/schedule.dart';
 import 'package:pharma_line/screens/user_info.dart';
 import 'package:pharma_line/screens/wallet.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
@@ -57,6 +56,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showErrors(BuildContext context, List<String> errors) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0.0,
+          content: Container(
+            width: 100,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: errors.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(errors[index]));
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      return Palette.midBlue;
+                    },
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'okay',
+                  textAlign: TextAlign.center,
+                ))
+          ],
+        );
+      },
     );
   }
 
@@ -146,7 +186,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: FontAwesomeIcons.solidCalendar,
                       title: 'Schedule',
                       onPressed: () {
-                        Navigator.pushNamed(context, ScheduleScreen.route);
+                        _showErrors(context, ['schedule not Available yet']);
+                        // Navigator.pushNamed(context, ScheduleScreen.route);
                       }),
                   _card(
                       icon: Icons.notifications,

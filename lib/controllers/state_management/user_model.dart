@@ -111,6 +111,7 @@ mixin UserModel on ChangeNotifier {
   void logout() {
     userController.removeUser();
     currentUser = null;
+    currentUserType = UserType.STUDENT;
     notifyListeners();
   }
 

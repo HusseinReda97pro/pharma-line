@@ -56,19 +56,26 @@ class UserController {
       print('signup body');
       print(body);
 
-      if (body['errors'] != null) {
-        List<String> errors = [];
-        for (var error in body['errors'].values) {
-          errors.add(error['message']);
-        }
-        return {'errors': errors};
-      }
-      if (body['message'] != null) {
-        print(body['message']);
-
+      // if (body['errors'] != null) {
+      //   List<String> errors = [];
+      //   for (var error in body['errors'].values) {
+      //     errors.add(error['message']);
+      //   }
+      //   return {'errors': errors};
+      // }
+      //
+      if (body['error']['message'] != null) {
         return {
-          'errors': [body['message'].toString()]
+          'errors': [body['error']['message'].toString()]
         };
+      } else {
+        if (body['message'] != null) {
+          print(body['message']);
+
+          return {
+            'errors': [body['message'].toString()]
+          };
+        }
       }
       return {'user': body};
     } catch (e) {
@@ -117,6 +124,7 @@ class UserController {
 
     try {
       http.Response response = await http.post(postUri, body: data);
+      print(response.body);
       if (response.body == 'Unauthorized') {
         return {
           'errors': ['Unauthorized']

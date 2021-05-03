@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/user_type.dart';
+import 'package:pharma_line/screens/about_screen.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/profile.dart';
 import 'package:pharma_line/screens/signup.dart';
+import 'package:pharma_line/screens/terms_and_conditions_screen.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -107,7 +109,9 @@ class AppDrawer extends StatelessWidget {
                         icon: Icons.logout,
                         onPressed: () {
                           model.logout();
-                          Navigator.pop(context);
+                          model.getCourses();
+                          Navigator.popUntil(
+                              context, ModalRoute.withName(HomeScreen.route));
                         },
                       ),
                 model.currentUser == null
@@ -121,6 +125,22 @@ class AppDrawer extends StatelessWidget {
                         },
                       )
                     : Container(),
+                _listTile(
+                  context: context,
+                  title: 'About',
+                  icon: Icons.not_listed_location_sharp,
+                  onPressed: () {
+                    _navigeteToPage(context, AboutScreen.route);
+                  },
+                ),
+                _listTile(
+                  context: context,
+                  title: 'Terms & Conditions',
+                  icon: Icons.info_outline_rounded,
+                  onPressed: () {
+                    _navigeteToPage(context, TermsAndConditionsScreen.route);
+                  },
+                ),
               ],
             ),
           ),
