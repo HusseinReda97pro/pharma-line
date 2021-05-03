@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:pharma_line/config/basic_config.dart';
 import 'package:pharma_line/models/course.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 class CourseController {
   Future<List<Course>> getCourses() async {
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/courses");
@@ -86,6 +87,10 @@ class CourseController {
 
   Future<void> enrollCourse(
       {@required String token, @required String courseId}) async {
+    FirebaseApp app = await Firebase.initializeApp();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    messaging.subscribeToTopic(courseId);
+
     Uri url = Uri.parse(BASIC_URL + '/api/v1/student/enrollCourse');
     http.Response response = await http
         .post(url, body: {"id": courseId}, headers: {'Authorization': token});

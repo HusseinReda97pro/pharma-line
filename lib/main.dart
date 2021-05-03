@@ -18,14 +18,21 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp app = await Firebase.initializeApp();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  messaging.subscribeToTopic("60826d279d5e54001ceb0e1b");
-  FirebaseMessaging.onMessage.listen((event) {
-    print(event.data);
-  });
+//  FirebaseApp app = await Firebase.initializeApp();
+//  FirebaseMessaging messaging = FirebaseMessaging.instance;
+//  messaging.subscribeToTopic("60826d279d5e54001ceb0e1b");
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(MyApp());
 }
 
@@ -34,6 +41,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((event) {
+      // print(event.data);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(event.data['title']) ));
+    });
+
     FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     mainModel.autoLogin();
     if (mainModel.currentCourses != null &&
