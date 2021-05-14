@@ -5,6 +5,7 @@ import 'package:pharma_line/controllers/lesson_controller.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/lesson.dart';
 import 'package:pharma_line/screens/pdf_viewer.dart';
+import 'package:pharma_line/screens/secure_scrren.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/app_drawer.dart';
 import 'package:video_player/video_player.dart';
@@ -119,7 +120,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SecureScrren(screen: Scaffold(
       appBar: MainAppBar(
         context: context,
       ),
@@ -207,6 +208,6 @@ class _LessonScreenState extends State<LessonScreen> {
       //     print("count is" + count.toString());
       //   },
       // ),
-    );
+    ));
   }
 }

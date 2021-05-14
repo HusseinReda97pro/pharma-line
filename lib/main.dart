@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pharma Line',
         theme: appTheme,
-        home: SecureScrren(screen: HomeScreen()),
+        home:  HomeScreen(),
         routes: {
           LoginScreen.route: (BuildContext context) =>
               SecureScrren(screen: LoginScreen()),

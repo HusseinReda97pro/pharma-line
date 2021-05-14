@@ -195,7 +195,7 @@ class CourseCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.0),
                       child: FadeInImage.assetNetwork(
                         placeholder: 'assets/images/placeholder.jpg',
-                        image: course.imageUrl,
+                        image: course.imageUrl??"placeholder",
                       ),
                     ),
                     //   Image.network(
