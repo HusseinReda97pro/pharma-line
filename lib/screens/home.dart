@@ -11,6 +11,7 @@ import 'package:pharma_line/widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   static const route = '/';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onRefresh: model.getCourses,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
-                      itemCount: model.homeCourses.length + 2,
+                      itemCount: model.homeCourses.length + 3,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 0) {
                           return (model.currentUser == null ||
@@ -82,13 +83,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                             color: Palette.lightBlue,
                                             fontSize: 22.0),
                                       ),
+
                                     ],
                                   ),
                                 );
                         }
-                        if (index == model.homeCourses.length + 1) {
+                        if (index == model.homeCourses.length + 2) {
                           return SizedBox(
                             height: 100,
+                          );
+                        } if (index == 1) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 8,
+                              children: [
+                                InkWell(
+
+                                  child: Chip(
+                                    label: Text("Level 1 "),
+
+                                  ),
+                                ),Chip(
+                                  label: Text("Level 2 "),
+                                ),Chip(
+                                  label: Text("Level 3 "),
+                                ),Chip(
+                                  label: Text("Level 4 "),
+                                ),
+                                Chip(
+                                  label: Text("Level 5 "),
+                                ),
+                              ],
+                            ),
                           );
                         }
                         return CourseCard(

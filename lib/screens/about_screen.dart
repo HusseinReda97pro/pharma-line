@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
@@ -14,39 +13,6 @@ class AboutScreen extends StatefulWidget {
   @override
   _AboutScreenState createState() => _AboutScreenState();
 }
-
-_launchURL(String value) async {
-  const url = 'https://github.com/atrishabhsharma';
-  const url2 = 'http://linkedin.com/in/rishabh-sharma-1a1184160';
-  const url3 = 'https://twitter.com/voyager_sage/';
-  const url4 = 'https://www.atrishabh1999@gmail.com';
-  if (value == 'Github') {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  } else if (value == 'linkedin') {
-    if (await canLaunch(url2)) {
-      await launch(url2);
-    } else {
-      throw 'Could not launch $url2';
-    }
-  } else if (value == 'twitter') {
-    if (await canLaunch(url3)) {
-      await launch(url3);
-    } else {
-      throw 'Could not launch $url3';
-    }
-  } else if (value == 'email') {
-    if (await canLaunch(url4)) {
-      await launch(url4);
-    } else {
-      throw 'Could not launch $url4';
-    }
-  }
-}
-
 class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
@@ -75,29 +41,27 @@ class _AboutScreenState extends State<AboutScreen> {
             style: TextStyle(color: Colors.white, fontSize: 18.0),
           ),
         ),
-        SignInButton(
-          Buttons.GitHub,
-          mini: true,
-          onPressed: () {
-            _launchURL('Github');
-          },
-        ),
+
 
         Container(
           margin: EdgeInsets.all(10.0),
           child: GestureDetector(
-            onTap: () async {
+            onTap: ()  {
               String url = 'https://www.facebook.com/pharma.line.fans';
-              if (await canLaunch(url)) {
-                await launch(
+
+
+
+               launch(
                   url,
+                  enableJavaScript: true,
                   forceSafariVC: true,
-                 // forceWebView: true,
+                  forceWebView: true,
+
                   // headers: <String, String>{'my_header_key': 'my_header_value'},
                 );
 
 
-              }
+
             },
             child: Row(
               children: [
@@ -136,14 +100,14 @@ class _AboutScreenState extends State<AboutScreen> {
                 url =
                     "https://api.whatsapp.com/send?phone=$phone=${Uri.parse(message)}"; // new line
               }
-              if (await canLaunch(url)) {
+
                 await launch(
                   url,
                   // forceSafariVC: true,
                   // forceWebView: true,
                   // headers: <String, String>{'my_header_key': 'my_header_value'},
                 );
-              }
+
             },
             child: Row(
               children: [
@@ -176,13 +140,12 @@ class _AboutScreenState extends State<AboutScreen> {
             onTap: () async {
               String url =
                   'https://www.google.com/maps/dir/30.0746496,31.2486105/30.0338234,31.2294531/@30.0567972,31.2592609,14z/data=!3m1!4b1!4m4!4m3!1m1!4e1!1m0';
-              if (await canLaunch(url)) {
                 await launch(
                   url,
 
                   // headers: <String, String>{'my_header_key': 'my_header_value'},
                 );
-              }
+
             },
             child: Row(
               children: [

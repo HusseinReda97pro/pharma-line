@@ -40,7 +40,7 @@ dependencies:
   dio: ^4.0.0
   firebase_core: ^1.0.4
   firebase_messaging: ^9.1.2
-  url_launcher: 6.0.3
+  #url_launcher: 6.0.3
   youtube_player_flutter: ^8.0.0
   flutter_cached_pdfview: ^0.4.0-nullsafety
   chewie: ^1.0.0
@@ -52,6 +52,8 @@ dependencies:
   fluttertoast: ^8.0.6
   battery: ^2.0.1
   flutter_html: ^2.0.0-nullsafety.1
+  url_launcher: ^6.0.4
+  html: ^0.15.0
 
 dev_dependencies:
   flutter_test:
