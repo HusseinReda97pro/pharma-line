@@ -6,9 +6,11 @@ import 'package:pharma_line/config/basic_config.dart';
 import 'package:pharma_line/models/course.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 class CourseController {
-  Future<List<Course>> getCourses() async {
-    var postUri = Uri.parse(BASIC_URL + "/api/v1/student/courses");
+  Future<List<Course>> getCourses({String type, int level}) async {
+    var postUri = Uri.parse(
+        BASIC_URL + "/api/v1/student/courses?type=$type&level=$level");
     try {
       http.Response response = await http.get(
         postUri,
@@ -60,22 +62,22 @@ class CourseController {
     List<Course> courses = [];
     for (var course in body) {
       try {
-      courses.add(
-        Course(
-            id: course['_id'],
-            title: course['title'],
-            description: course['description'],
-            imageUrl: course['imageUrl'],
-            teacher: course['teacher']['firstName'] +
-                " " +
-                course['teacher']['lastName'],
-            // course['teacher']['firstName'] +
-            //     course['teacher']['lastName'],
-            label: course['label'],
-            faculty: '',
-            university: '',
-            isLive: false),
-      );
+        courses.add(
+          Course(
+              id: course['_id'],
+              title: course['title'],
+              description: course['description'],
+              imageUrl: course['imageUrl'],
+              teacher: course['teacher']['firstName'] +
+                  " " +
+                  course['teacher']['lastName'],
+              // course['teacher']['firstName'] +
+              //     course['teacher']['lastName'],
+              label: course['label'],
+              faculty: '',
+              university: '',
+              isLive: false),
+        );
       } catch (e) {
         print('Add Course Error');
         print(e);

@@ -10,10 +10,10 @@ mixin CourseModel on ChangeNotifier {
   List<Course> homeCourses = [];
 
   bool loadingCourses = false;
-  Future<void> getCourses() async {
+  Future<void> getCourses({String type, int level}) async {
     loadingCourses = true;
     notifyListeners();
-    homeCourses = await courseController.getCourses();
+    homeCourses = await courseController.getCourses(type: type, level: level);
     if (MyApp.mainModel.currentUser != null) {
       await getMyCourses(token: MyApp.mainModel.currentUser.token);
     }

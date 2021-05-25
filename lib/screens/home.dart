@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String selectedType;
+  int selectedLevel;
   @override
   Widget build(BuildContext context) {
     return Consumer<MainModel>(
@@ -36,13 +38,132 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : model.homeCourses.length == 0
                 ? Center(
-                    child: Text(
-                      'there is no courses yet.',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    hint: Text(
+                                      'Level',
+                                      style:
+                                          TextStyle(color: Palette.lightBlue),
+                                    ),
+                                    iconSize: 32.0,
+                                    iconEnabledColor: Palette.lightBlue,
+                                    isExpanded: true,
+                                    style: TextStyle(color: Palette.lightBlue),
+                                    dropdownColor: Palette.midBlue,
+                                    value: selectedLevel,
+                                    onChanged: (value) {
+                                      selectedLevel = value;
+                                      try {
+                                        model.getCourses(
+                                            level: selectedLevel,
+                                            type: selectedType);
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    },
+                                    items: [
+                                      DropdownMenuItem(
+                                        child: Text("Level 1"),
+                                        value: 1,
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("Level 2"),
+                                        value: 2,
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("Level 3"),
+                                        value: 3,
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("Level 4"),
+                                        value: 4,
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("Level 5"),
+                                        value: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    hint: Text(
+                                      'Type',
+                                      style:
+                                          TextStyle(color: Palette.lightBlue),
+                                    ),
+                                    iconSize: 32.0,
+                                    iconEnabledColor: Palette.lightBlue,
+                                    isExpanded: true,
+                                    style: TextStyle(color: Palette.lightBlue),
+                                    dropdownColor: Palette.midBlue,
+                                    value: selectedType,
+                                    onChanged: (value) {
+                                      selectedType = value;
+                                      try {
+                                        model.getCourses(
+                                            level: selectedLevel,
+                                            type: selectedType);
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    },
+                                    items: [
+                                      DropdownMenuItem(
+                                        child: Text("Medical"),
+                                        value: "medical",
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("General"),
+                                        value: "general",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if (selectedLevel != null || selectedType != null)
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedLevel = null;
+                                      selectedType = null;
+                                      model.getCourses();
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: Palette.lightBlue,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          'there is no courses yet.',
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        ),
+                      ],
                     ),
                   )
                 : RefreshIndicator(
-                    onRefresh: model.getCourses,
+                    onRefresh: () async {
+                      selectedLevel = null;
+                      selectedType = null;
+                      await model.getCourses();
+                    },
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       itemCount: model.homeCourses.length + 3,
@@ -83,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             color: Palette.lightBlue,
                                             fontSize: 22.0),
                                       ),
-
                                     ],
                                   ),
                                 );
@@ -92,49 +212,129 @@ class _HomeScreenState extends State<HomeScreen> {
                           return SizedBox(
                             height: 100,
                           );
-                        } if (index == 1) {
+                        }
+                        if (index == 1) {
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Wrap(
-                              spacing: 8,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 8.0),
+                            child: Row(
                               children: [
-                                InkWell(
-
-                                  child: Chip(
-                                    label: Text("Level 1 "),
-
+                                Expanded(
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      hint: Text(
+                                        'Level',
+                                        style:
+                                            TextStyle(color: Palette.lightBlue),
+                                      ),
+                                      iconSize: 32.0,
+                                      iconEnabledColor: Palette.lightBlue,
+                                      isExpanded: true,
+                                      style:
+                                          TextStyle(color: Palette.lightBlue),
+                                      dropdownColor: Palette.midBlue,
+                                      value: selectedLevel,
+                                      onChanged: (value) {
+                                        selectedLevel = value;
+                                        try {
+                                          model.getCourses(
+                                              level: selectedLevel,
+                                              type: selectedType);
+                                        } catch (e) {
+                                          print(e);
+                                        }
+                                      },
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Text("Level 1"),
+                                          value: 1,
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Level 2"),
+                                          value: 2,
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Level 3"),
+                                          value: 3,
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Level 4"),
+                                          value: 4,
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("Level 5"),
+                                          value: 5,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),Chip(
-                                  label: Text("Level 2 "),
-                                ),Chip(
-                                  label: Text("Level 3 "),
-                                ),Chip(
-                                  label: Text("Level 4 "),
                                 ),
-                                Chip(
-                                  label: Text("Level 5 "),
+                                SizedBox(
+                                  width: 20,
                                 ),
+                                Expanded(
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      hint: Text(
+                                        'Type',
+                                        style:
+                                            TextStyle(color: Palette.lightBlue),
+                                      ),
+                                      iconSize: 32.0,
+                                      iconEnabledColor: Palette.lightBlue,
+                                      isExpanded: true,
+                                      style:
+                                          TextStyle(color: Palette.lightBlue),
+                                      dropdownColor: Palette.midBlue,
+                                      value: selectedType,
+                                      onChanged: (value) {
+                                        selectedType = value;
+                                        try {
+                                          model.getCourses(
+                                              level: selectedLevel,
+                                              type: selectedType);
+                                        } catch (e) {
+                                          print(e);
+                                        }
+                                      },
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Text("Medical"),
+                                          value: "medical",
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Text("General"),
+                                          value: "general",
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (selectedLevel != null ||
+                                    selectedType != null)
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedLevel = null;
+                                        selectedType = null;
+                                        model.getCourses();
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: Palette.lightBlue,
+                                    ),
+                                  ),
                               ],
                             ),
                           );
                         }
                         return CourseCard(
-                          course: model.homeCourses[index - 1],
+                          course: model.homeCourses[index - 2],
                         );
                       },
                     ),
                   ),
-        // floatingActionButton: FloatingActionButton(
-        //   child: Icon(Icons.ac_unit),
-        //   onPressed: () {
-        //     var token =
-        //         'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDgyNjdjZjNkZWEwOTAwMWM0OTVmMzciLCJpYXQiOjE2MTk3ODI4MjN9.7Q5bdgXW7QRun8GeJebKDQOdQLWIjNahq5v_gSDZN7g';
-
-        //     model.getCourseStudents(
-        //         token: token, courseId: '60826d279d5e54001ceb0e1b');
-        //     Navigator.pushNamed(context, CourseStudents.route);
-        //   },
-        // ),
       );
     });
   }
