@@ -64,7 +64,7 @@ class UserController {
       //   return {'errors': errors};
       // }
       //
-      if (body['error']['message'] != null) {
+      if (body['error'] != null && body["error"]['message'] != null) {
         return {
           'errors': [body['error']['message'].toString()]
         };
