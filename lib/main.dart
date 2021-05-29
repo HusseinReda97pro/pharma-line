@@ -20,6 +20,7 @@ import 'package:pharma_line/screens/terms_and_conditions_screen.dart';
 import 'package:pharma_line/screens/user_info.dart';
 import 'package:pharma_line/screens/wallet.dart';
 import 'package:provider/provider.dart';
+//import 'package:secure_application/secure_application.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -41,7 +42,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static final MainModel mainModel = MainModel();
-
   @override
   Widget build(BuildContext context) {
     FirebaseMessaging.onMessage.listen((event) {
@@ -63,18 +63,19 @@ class MyApp extends StatelessWidget {
     }
     return ChangeNotifierProvider(
       create: (context) => mainModel,
-      child: MaterialApp(
+      child:
+      MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pharma Line',
         theme: appTheme,
         home:  HomeScreen(),
         routes: {
           LoginScreen.route: (BuildContext context) =>
-              SecureScrren(screen: LoginScreen()),
+               LoginScreen(),
           ProfileScreen.route: (BuildContext context) =>
-              SecureScrren(screen: ProfileScreen()),
+               ProfileScreen(),
           UserInfoScreen.route: (BuildContext context) =>
-              SecureScrren(screen: UserInfoScreen()),
+               UserInfoScreen(),
           WalletScreen.route: (BuildContext context) => WalletScreen(),
           SearchScreen.route: (BuildContext context) => SearchScreen(),
           NotificationsScreen.route: (BuildContext context) =>

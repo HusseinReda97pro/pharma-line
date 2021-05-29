@@ -120,7 +120,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SecureScrren(screen: Scaffold(
+    return Scaffold(
       appBar: MainAppBar(
         context: context,
       ),
@@ -208,6 +208,6 @@ class _LessonScreenState extends State<LessonScreen> {
       //     print("count is" + count.toString());
       //   },
       // ),
-    ));
+    );
   }
 }

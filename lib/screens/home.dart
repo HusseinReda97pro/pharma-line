@@ -40,6 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? Center(
                     child: Column(
                       children: [
+
+
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 24.0, vertical: 8.0),
@@ -123,8 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     items: [
                                       DropdownMenuItem(
-                                        child: Text("Medical"),
-                                        value: "medical",
+                                        child: Text("Clinical"),
+                                        value: "Clinical",
                                       ),
                                       DropdownMenuItem(
                                         child: Text("General"),
@@ -299,8 +301,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       items: [
                                         DropdownMenuItem(
-                                          child: Text("Medical"),
-                                          value: "medical",
+                                          child: Text("Clinical"),
+                                          value: "clinical",
                                         ),
                                         DropdownMenuItem(
                                           child: Text("General"),
