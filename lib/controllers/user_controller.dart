@@ -101,6 +101,40 @@ class UserController {
       }
       var body = json.decode(response.body);
 
+      if (body['errors'] != null ||
+          (body['error'] != null && body['error']['errors'])) {
+        List<String> errors = [];
+        for (var error in body['errors'].values) {
+          errors.add(error['message']);
+        }
+        if (body['error'] != null) {
+          for (var error in body['error']['errors'].values) {
+            errors.add(error['message']);
+          }
+        }
+        return {'errors': errors};
+      }
+
+      return {'user': body};
+    } catch (e) {
+      print(e);
+      return {
+        'errors': ['something went wrong']
+      };
+    }
+  }
+
+  Future<dynamic> forgotPassword(String email) async {
+    String deviceId = await DeviceToken.getId();
+    print(deviceId);
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/student/forgotPassword");
+    var data = {'email': email};
+
+    try {
+      http.Response response = await http.post(postUri, body: data);
+
+      var body = json.decode(response.body);
+      print(body.toString());
       if (body['errors'] != null) {
         List<String> errors = [];
         for (var error in body['errors'].values) {
@@ -109,7 +143,36 @@ class UserController {
         return {'errors': errors};
       }
 
-      return {'user': body};
+      return body;
+    } catch (e) {
+      print(e);
+      return {
+        'errors': ['something went wrong']
+      };
+    }
+  }
+
+  Future<dynamic> resetPassword(
+      String email, String code, String newPass) async {
+    String deviceId = await DeviceToken.getId();
+    print(deviceId);
+    var postUri = Uri.parse(BASIC_URL + "/api/v1/student/resetPassword");
+    var data = {'email': email, 'code': code, 'password': newPass};
+
+    try {
+      http.Response response = await http.post(postUri, body: data);
+
+      var body = json.decode(response.body);
+      print(body.toString());
+      if (body['errors'] != null) {
+        List<String> errors = [];
+        for (var error in body['errors'].values) {
+          errors.add(error['message']);
+        }
+        return {'errors': errors};
+      }
+
+      return body;
     } catch (e) {
       print(e);
       return {
@@ -254,6 +317,7 @@ class UserController {
       var points = body['points'];
       var balance = body['balance'].toString();
       var imageUrl = body["profilePicture"];
+      var enabled = body['enabled'];
       User user = User(
           firstName: firstName,
           lastName: lastName,
@@ -267,7 +331,8 @@ class UserController {
           balance: balance,
           id: id,
           coursesIds: [],
-          lessonsIds: []);
+          lessonsIds: [],
+          enabled: enabled);
       return user;
     } catch (e) {
       print('auto login error');
@@ -289,6 +354,8 @@ class UserController {
         .get(url, headers: {io.HttpHeaders.authorizationHeader: token});
     var data = json.decode(response.body);
 
+    print("History " + data.toString());
+
     try {
       for (var hist in data) {
         //enum HistoryStatus { SPEND, COMPLETE, RECHARGE }
@@ -303,11 +370,13 @@ class UserController {
         }
         histories.add(
           History(
-              amount: hist['transactionAmout'],
-              status: userstatus,
-              lessonName: hist['title'] ?? hist['transactionType']
-              // hist['productId']
-              ),
+            amount: hist['transactionAmout'],
+            status: userstatus,
+            lessonName: hist['lessonId'] == null
+                ? hist['transactionType']
+                : hist['lessonId']['title'],
+            // hist['productId']
+          ),
         );
       }
     } catch (e) {

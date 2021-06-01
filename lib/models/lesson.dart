@@ -8,6 +8,8 @@ class Lesson {
   final String videoUrl;
   final String pdfUrl;
   final int price;
+  final int maxCount;
+  final int count;
 
   Lesson(
       {@required this.id,
@@ -16,5 +18,7 @@ class Lesson {
       this.imageUrl,
       this.videoUrl,
       this.pdfUrl,
-      @required this.price});
+      @required this.price,
+      @required this.maxCount,
+      @required this.count});
 }

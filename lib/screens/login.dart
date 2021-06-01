@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/user_type.dart';
+import 'package:pharma_line/screens/forgot_password.dart';
 import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/signup.dart';
 import 'package:pharma_line/widgets/input.dart';
@@ -108,6 +109,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     hint: 'password',
                     controller: passwordController,
                     obscureText: true,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ForgotPassword()));
+                    },
+                    child: Text(
+                      "Forgot Password?",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: Palette.lightBlue, fontSize: 14.0),
+                    ),
                   ),
                   SizedBox(
                     height: 5.0,

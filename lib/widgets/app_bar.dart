@@ -32,7 +32,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: SizedBox(),
             ),
-            model.currentUserType == UserType.TEACHER
+            model.currentUserType == UserType.TEACHER ||
+                    (model.currentUser != null && !model.currentUser.enabled)
                 ? Container()
                 : RoundedButton(
                     backgroundColor: Palette.midBlue,
@@ -45,7 +46,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                       model.currentCourses.clear();
                       Navigator.pushNamed(context, SearchScreen.route);
                     }),
-            model.currentUserType == UserType.TEACHER
+            model.currentUserType == UserType.TEACHER ||
+                    (model.currentUser != null && !model.currentUser.enabled)
                 ? Container()
                 : RoundedButton(
                     backgroundColor: Palette.midBlue,

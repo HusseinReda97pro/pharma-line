@@ -14,6 +14,7 @@ class User {
   String balance;
   List<String> coursesIds;
   List<String> lessonsIds;
+  bool enabled;
   User(
       {@required this.firstName,
       @required this.lastName,
@@ -27,5 +28,6 @@ class User {
       this.balance,
       this.token,
       this.coursesIds,
-      this.lessonsIds});
+      this.lessonsIds,
+      this.enabled = false});
 }

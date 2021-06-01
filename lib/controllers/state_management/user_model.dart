@@ -71,7 +71,8 @@ mixin UserModel on ChangeNotifier {
         facultyId: signedUpUser['faculty'],
         profileImageUrl: signedUpUser['profilePicture'],
         coursesIds: [],
-        lessonsIds: []);
+        lessonsIds: [],
+        enabled: signedUpUser['enabled']);
     userController.storeUser(token: signedUpUser['token']);
   }
 
@@ -102,10 +103,22 @@ mixin UserModel on ChangeNotifier {
         facultyId: signedUpUser['faculty'],
         profileImageUrl: signedUpUser['profilePicture'],
         coursesIds: [],
-        lessonsIds: []);
+        lessonsIds: [],
+        enabled: signedUpUser['enabled']);
     userController.storeUser(token: signedUpUser['token']);
     MyApp.mainModel.getUserCourses();
     notifyListeners();
+  }
+
+  Future<dynamic> forgotPassword(String email) async {
+    var res = await userController.forgotPassword(email);
+    return res;
+  }
+
+  Future<dynamic> resetPassword(
+      String email, String code, String newPass) async {
+    var res = await userController.resetPassword(email, code, newPass);
+    return res;
   }
 
   void logout() {

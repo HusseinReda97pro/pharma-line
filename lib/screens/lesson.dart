@@ -8,6 +8,7 @@ import 'package:pharma_line/screens/pdf_viewer.dart';
 import 'package:pharma_line/screens/secure_scrren.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/app_drawer.dart';
+import 'package:secure_application/secure_application.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -16,7 +17,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 class LessonScreen extends StatefulWidget {
   final Lesson lesson;
   final String courseId;
-  LessonScreen({@required this.lesson, @required this.courseId});
+  LessonScreen({
+    @required this.lesson,
+    @required this.courseId,
+  });
 
   @override
   _LessonScreenState createState() => _LessonScreenState();
@@ -120,94 +124,121 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MainAppBar(
-        context: context,
-      ),
-      drawer: AppDrawer(),
-      body: ListView(
-        children: [
-          Container(
-            margin: EdgeInsets.all(10.0),
-            child: Text(
-              widget.lesson.title,
-              style: TextStyle(color: Colors.white, fontSize: 20.0),
-              textAlign: TextAlign.center,
-            ),
+    return SecureApplication(
+      child: SecureGate(
+        child: Scaffold(
+          appBar: MainAppBar(
+            context: context,
           ),
-          widget.lesson.imageUrl == null
-              ? Container()
-              : Image.network(widget.lesson.imageUrl),
-          widget.lesson.description == null
-              ? Container()
-              : Container(
-                  margin: EdgeInsets.all(10.0),
-                  child: Text(
-                    widget.lesson.description,
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
-                  ),
-                ),
-          widget.lesson.videoUrl == null
-              ? Container()
-              : _chewieController != null &&
-                      _chewieController
-                          .videoPlayerController.value.isInitialized
-                  ? Container(
-                      constraints: BoxConstraints(maxHeight: 250),
-                      child: Chewie(
-                        controller: _chewieController,
-                      ),
-                    )
-                  : Center(
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-          //  YoutubePlayer(
-          //     controller: _youtubePlayerController,
-          //   ),
-          widget.lesson.pdfUrl == null
-              ? Container()
-              : Container(
-                  margin: EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Palette.midBlue),
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        (MaterialPageRoute(builder: (BuildContext context) {
-                          return PDFViewerScreen(
-                            pdfUrl: widget.lesson.pdfUrl,
-                          );
-                        })),
-                      );
-                      // await canLaunch(widget.lesson.pdfUrl)
-                      //     ? await launch(widget.lesson.pdfUrl)
-                      //     : throw 'Could not launch';
-                    },
+          drawer: AppDrawer(),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              ListView(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
                     child: Text(
-                      'Open Attachment',
-                      style: TextStyle(fontSize: 18.0),
+                      widget.lesson.title,
+                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                ),
-          SizedBox(
-            height: 40,
-          )
-        ],
+                  widget.lesson.imageUrl == null
+                      ? Container()
+                      : Image.network(widget.lesson.imageUrl),
+                  widget.lesson.description == null
+                      ? Container()
+                      : Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: Text(
+                            widget.lesson.description,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20.0),
+                          ),
+                        ),
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    child: Text(
+                      "You've Watched this course ${widget.lesson.count} times, Your Remaining Times ${widget.lesson.maxCount - widget.lesson.count}",
+                      style:
+                          TextStyle(color: Palette.lightBlue, fontSize: 16.0),
+                    ),
+                  ),
+                  widget.lesson.videoUrl == null
+                      ? Container()
+                      : _chewieController != null &&
+                              _chewieController
+                                  .videoPlayerController.value.isInitialized
+                          ? Container(
+                              constraints: BoxConstraints(maxHeight: 250),
+                              child: Chewie(
+                                controller: _chewieController,
+                              ),
+                            )
+                          : Center(
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                  //  YoutubePlayer(
+                  //     controller: _youtubePlayerController,
+                  //   ),
+                  widget.lesson.pdfUrl == null
+                      ? Container()
+                      : Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Palette.midBlue),
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                (MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                  return PDFViewerScreen(
+                                    pdfUrl: widget.lesson.pdfUrl,
+                                  );
+                                })),
+                              );
+                              // await canLaunch(widget.lesson.pdfUrl)
+                              //     ? await launch(widget.lesson.pdfUrl)
+                              //     : throw 'Could not launch';
+                            },
+                            child: Text(
+                              'Open Attachment',
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                          ),
+                        ),
+                  SizedBox(
+                    height: 40,
+                  )
+                ],
+              ),
+              Text(
+                MyApp.mainModel.currentUser.email,
+                style: TextStyle(
+                    color: Palette.lightBlue.withAlpha(150),
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          // floatingActionButton: FloatingActionButton(
+          //   child: Text('+'),
+          //   onPressed: () async {
+          //     int count = await LessonController().updateLessonProgress(
+          //         token: MyApp.mainModel.currentUser.token,
+          //         courseId: widget.courseId,
+          //         lessonId: widget.lesson.id);
+          //     print("count is" + count.toString());
+          //   },
+          // ),
+        ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Text('+'),
-      //   onPressed: () async {
-      //     int count = await LessonController().updateLessonProgress(
-      //         token: MyApp.mainModel.currentUser.token,
-      //         courseId: widget.courseId,
-      //         lessonId: widget.lesson.id);
-      //     print("count is" + count.toString());
-      //   },
-      // ),
     );
   }
 }

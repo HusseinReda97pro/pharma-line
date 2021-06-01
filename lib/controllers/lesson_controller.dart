@@ -17,6 +17,8 @@ class LessonController {
 
       var body = json.decode(response.body);
 
+      print("Lessons" + body[0].toString());
+
       return await convertToLesson(body);
     } catch (e) {
       print(e);
@@ -39,6 +41,8 @@ class LessonController {
       if (body['message'] != null) {
         return {'error': body['message']};
       }
+      print("LESSON TEST" + body.toString());
+
       return {
         'lesson': Lesson(
             id: body['_id'],
@@ -47,10 +51,13 @@ class LessonController {
             price: body['price'],
             imageUrl: body['imageUrl'],
             videoUrl: body['videoUrl'],
-            pdfUrl: body['pdfUrl'])
+            pdfUrl: body['pdfUrl'],
+            maxCount: body['maxCount'] != null ? body['maxCount'] : 0,
+            count: body['count'] != null ? body['count'] : 0)
       };
     } catch (_) {
-      return {'error': 'somethin went worng'};
+      print("LESSON TEST Error" + _.toString());
+      return {'error': 'something went worng'};
     }
   }
 
@@ -132,14 +139,18 @@ class LessonController {
     List<Lesson> lessons = [];
     for (var lesson in body) {
       try {
+        print("lessonBody " + lesson.toString());
         lessons.add(
           Lesson(
               id: lesson['_id'],
               title: lesson['title'],
               description: lesson['description'],
               imageUrl: lesson['imageUrl'],
-              price: lesson['price']),
+              price: lesson['price'],
+              maxCount: lesson['maxCount'] != null ? body['maxCount'] : 0,
+              count: lesson['count'] != null ? body['count'] : 0),
         );
+        print("lessonBody end");
       } catch (e) {
         print(e);
       }

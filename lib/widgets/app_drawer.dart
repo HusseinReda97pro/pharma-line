@@ -71,7 +71,8 @@ class AppDrawer extends StatelessWidget {
                   },
                 ),
                 (model.currentUser == null ||
-                        model.currentUserType == UserType.TEACHER)
+                        model.currentUserType == UserType.TEACHER ||
+                        !model.currentUser.enabled)
                     ? Container()
                     : _listTile(
                         context: context,
@@ -84,7 +85,8 @@ class AppDrawer extends StatelessWidget {
                         },
                       ),
                 (model.currentUser == null ||
-                        model.currentUserType == UserType.TEACHER)
+                        model.currentUserType == UserType.TEACHER ||
+                        !model.currentUser.enabled)
                     ? Container()
                     : _listTile(
                         context: context,
