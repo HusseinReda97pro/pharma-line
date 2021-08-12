@@ -124,9 +124,15 @@ class LessonController {
       if (response.body == 'Unauthorized') {
         return count;
       }
+      print(lessonId);
       var body = json.decode(response.body);
 
-      count = body[0]['lessons'][0]['count'];
+      print(body);
+
+      count = ((body as List)
+                  .firstWhere((element) => element['id'] == courseId)['lessons']
+              as List)
+          .firstWhere((element) => element['id'] == lessonId)['count'];
       return count;
     } catch (e) {
       print('Error at update watching video');

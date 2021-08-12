@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/lesson_controller.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
@@ -30,17 +31,32 @@ class LessonCard extends StatelessWidget {
       if (res['error'] != null) {
         _showErrors(context, res['error']);
       } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return LessonScreen(
-                lesson: res['lesson'],
-                courseId: courseId,
-              );
-            },
-          ),
-        );
+        Lesson lesson = res['lesson'];
+        if (lesson.count >= lesson.maxCount) {
+          Fluttertoast.showToast(
+              msg: 'You consumed ' +
+                  lesson.count.toString() +
+                  (lesson.count == 1 ? ' view' : ' views') +
+                  ' out of ${lesson.maxCount}',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Color(0xFFCCCCCC),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return LessonScreen(
+                  lesson: res['lesson'],
+                  courseId: courseId,
+                );
+              },
+            ),
+          );
+        }
       }
     }
   }
@@ -347,9 +363,11 @@ class LessonCard extends StatelessWidget {
                       : Container(
                           width: MediaQuery.of(context).size.width,
                           child: ElevatedButton(
-                            onPressed: () {
-                              _handelOpenLesson(context: context);
-                            },
+                            onPressed: lesson.count >= lesson.maxCount
+                                ? null
+                                : () {
+                                    _handelOpenLesson(context: context);
+                                  },
                             child: Text(
                               'Enroll Now',
                               style: TextStyle(color: Palette.darkBlue),

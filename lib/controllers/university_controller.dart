@@ -15,8 +15,14 @@ class UniversityController {
     try {
       for (var uni in data) {
         List<Faculty> faculties = [];
+
         for (var faculty in uni['faculties']) {
-          faculties.add(Faculty(id: faculty['_id'], name: faculty['name']));
+          faculties.add(Faculty(
+              id: faculty['_id'],
+              name: faculty['name'],
+              types: (faculty['types'] as List)
+                  ?.map((item) => item as String)
+                  ?.toList()));
         }
         universities.add(University(
             id: uni['_id'], name: uni['name'], faculties: faculties));

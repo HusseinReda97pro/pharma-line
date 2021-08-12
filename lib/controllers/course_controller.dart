@@ -41,9 +41,9 @@ class CourseController {
   }
 
   Future<List<Course>> getCoursesByFacultyId(
-      {@required String facultyId}) async {
-    var postUri =
-        Uri.parse(BASIC_URL + "/api/v1/courses/faculty?facultyId=$facultyId");
+      {@required String facultyId, String type, int level}) async {
+    var postUri = Uri.parse(BASIC_URL +
+        "/api/v1/courses/faculty?facultyId=$facultyId&type=$type&level=$level");
     try {
       http.Response response = await http.get(
         postUri,

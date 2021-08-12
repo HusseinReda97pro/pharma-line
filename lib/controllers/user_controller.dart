@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:async/async.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:pharma_line/config/basic_config.dart';
@@ -16,6 +17,7 @@ import 'device_token.dart';
 class UserController {
   Future<dynamic> signUp(User user, String password, io.File image) async {
     String deviceId = await DeviceToken.getId();
+    String notificationsToken = await FirebaseMessaging.instance.getToken();
     print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/signup");
     var request = new http.MultipartRequest("POST", postUri);
@@ -27,6 +29,7 @@ class UserController {
     request.fields['password'] = password;
     request.fields['deviceId'] = deviceId;
     request.fields['faculty'] = user.facultyId;
+    request.fields['notificationsToken'] = notificationsToken;
 
     // request.files.add(new http.MultipartFile.fromBytes(
     //   'profilePicture',
@@ -88,9 +91,15 @@ class UserController {
 
   Future<dynamic> login(String email, String password) async {
     String deviceId = await DeviceToken.getId();
+    String notificationsToken = await FirebaseMessaging.instance.getToken();
     print(deviceId);
     var postUri = Uri.parse(BASIC_URL + "/api/v1/student/login");
-    var data = {'email': email, 'password': password, 'deviceId': deviceId};
+    var data = {
+      'email': email,
+      'password': password,
+      'deviceId': deviceId,
+      'notificationsToken': notificationsToken
+    };
 
     try {
       http.Response response = await http.post(postUri, body: data);
@@ -102,7 +111,7 @@ class UserController {
       var body = json.decode(response.body);
 
       if (body['errors'] != null ||
-          (body['error'] != null && body['error']['errors'])) {
+          (body['error'] != null && body['error']['errors'] != null)) {
         List<String> errors = [];
         for (var error in body['errors'].values) {
           errors.add(error['message']);

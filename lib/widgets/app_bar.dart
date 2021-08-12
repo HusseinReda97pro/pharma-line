@@ -42,7 +42,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                       color: Palette.lightBlue,
                     ),
                     onPressed: () {
-                      model.getUniversities();
+                      // model.getUniversities();
                       model.currentCourses.clear();
                       Navigator.pushNamed(context, SearchScreen.route);
                     }),

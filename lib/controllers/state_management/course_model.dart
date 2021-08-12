@@ -2,22 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/controllers/course_controller.dart';
 import 'package:pharma_line/main.dart';
 import 'package:pharma_line/models/course.dart';
-import 'package:pharma_line/models/user_type.dart';
 
 mixin CourseModel on ChangeNotifier {
   CourseController courseController = CourseController();
   List<Course> currentCourses = [];
   List<Course> homeCourses = [];
+  List<Course> triaingCourses = [];
 
   bool loadingCourses = false;
   Future<void> getCourses({String type, int level}) async {
     loadingCourses = true;
     notifyListeners();
-    homeCourses = await courseController.getCourses(type: type, level: level);
+    homeCourses = await courseController.getCourses(
+        type: type?.toLowerCase(), level: level);
     if (MyApp.mainModel.currentUser != null) {
       await getMyCourses(token: MyApp.mainModel.currentUser.token);
     }
     await getUserCourses();
+    loadingCourses = false;
+    notifyListeners();
+  }
+
+  Future<void> getTrainingCourses() async {
+    loadingCourses = true;
+    notifyListeners();
+    triaingCourses = await courseController.getCourses(type: "training");
     loadingCourses = false;
     notifyListeners();
   }
@@ -30,11 +39,12 @@ mixin CourseModel on ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCoursesByFacultyId({@required String facultyId}) async {
+  Future<void> getCoursesByFacultyId(
+      {@required String facultyId, String type, int level}) async {
     loadingCourses = true;
     notifyListeners();
-    currentCourses =
-        await courseController.getCoursesByFacultyId(facultyId: facultyId);
+    currentCourses = await courseController.getCoursesByFacultyId(
+        facultyId: facultyId, type: type?.toLowerCase(), level: level);
     loadingCourses = false;
     notifyListeners();
   }

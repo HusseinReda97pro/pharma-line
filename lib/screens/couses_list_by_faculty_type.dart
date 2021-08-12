@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
+import 'package:pharma_line/models/faculty.dart';
 import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
+import 'package:pharma_line/widgets/app_drawer.dart';
 import 'package:pharma_line/widgets/course_card.dart';
 import 'package:provider/provider.dart';
 
-import 'package:pharma_line/widgets/app_drawer.dart';
-
-class HomeScreen extends StatefulWidget {
-  static const route = '/';
+class FacultyAndTypeCourses extends StatefulWidget {
+  final String type;
+  final Faculty faculty;
+  FacultyAndTypeCourses({this.faculty, this.type});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<FacultyAndTypeCourses> createState() => _FacultyAndTypeCoursesState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  String selectedType;
+class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
   int selectedLevel;
-
   @override
   Widget build(BuildContext context) {
     return Consumer<MainModel>(
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircularProgressIndicator(),
                     ),
                   )
-                : model.homeCourses.length == 0
+                : model.currentCourses.length == 0
                     ? Center(
                         child: Column(
                           children: [
@@ -74,9 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onChanged: (value) {
                                           selectedLevel = value;
                                           try {
-                                            model.getCourses(
+                                            model.getCoursesByFacultyId(
+                                                facultyId: widget.faculty.id,
                                                 level: selectedLevel,
-                                                type: selectedType);
+                                                type: widget.type);
                                           } catch (e) {
                                             print(e);
                                           }
@@ -106,59 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton(
-                                        hint: Text(
-                                          'Type',
-                                          style: TextStyle(
-                                              color: Palette.lightBlue),
-                                        ),
-                                        iconSize: 32.0,
-                                        iconEnabledColor: Palette.lightBlue,
-                                        isExpanded: true,
-                                        style:
-                                            TextStyle(color: Palette.lightBlue),
-                                        dropdownColor: Palette.midBlue,
-                                        value: selectedType,
-                                        onChanged: (value) {
-                                          selectedType = value;
-                                          try {
-                                            model.getCourses(
-                                                level: selectedLevel,
-                                                type: selectedType);
-                                          } catch (e) {
-                                            print(e);
-                                          }
-                                        },
-                                        items: [
-                                          DropdownMenuItem(
-                                            child: Text("Clinical"),
-                                            value: "clinical",
-                                          ),
-                                          DropdownMenuItem(
-                                            child: Text("General"),
-                                            value: "general",
-                                          ),
-                                          DropdownMenuItem(
-                                            child: Text("Training"),
-                                            value: "training",
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  if (selectedLevel != null ||
-                                      selectedType != null)
+                                  if (selectedLevel != null)
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
                                           selectedLevel = null;
-                                          selectedType = null;
-                                          model.getCourses();
+                                          model.getCoursesByFacultyId(
+                                              facultyId: widget.faculty.id,
+                                              type: widget.type);
                                         });
                                       },
                                       icon: Icon(
@@ -180,12 +136,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     : RefreshIndicator(
                         onRefresh: () async {
                           selectedLevel = null;
-                          selectedType = null;
-                          await model.getCourses();
+                          await model.getCoursesByFacultyId(
+                              facultyId: widget.faculty.id, type: widget.type);
                         },
                         child: ListView.builder(
                           physics: BouncingScrollPhysics(),
-                          itemCount: model.homeCourses.length + 3,
+                          itemCount: model.currentCourses.length + 3,
                           itemBuilder: (BuildContext context, int index) {
                             if (index == 0) {
                               return (model.currentUser == null ||
@@ -228,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                             }
-                            if (index == model.homeCourses.length + 2) {
+                            if (index == model.currentCourses.length + 2) {
                               return SizedBox(
                                 height: 100,
                               );
@@ -257,9 +213,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           onChanged: (value) {
                                             selectedLevel = value;
                                             try {
-                                              model.getCourses(
+                                              model.getCoursesByFacultyId(
+                                                  facultyId: widget.faculty.id,
                                                   level: selectedLevel,
-                                                  type: selectedType);
+                                                  type: widget.type);
                                             } catch (e) {
                                               print(e);
                                             }
@@ -289,59 +246,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Expanded(
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton(
-                                          hint: Text(
-                                            'Type',
-                                            style: TextStyle(
-                                                color: Palette.lightBlue),
-                                          ),
-                                          iconSize: 32.0,
-                                          iconEnabledColor: Palette.lightBlue,
-                                          isExpanded: true,
-                                          style: TextStyle(
-                                              color: Palette.lightBlue),
-                                          dropdownColor: Palette.midBlue,
-                                          value: selectedType,
-                                          onChanged: (value) async {
-                                            selectedType = value;
-                                            try {
-                                              await model.getCourses(
-                                                  level: selectedLevel,
-                                                  type: selectedType);
-                                            } catch (e) {
-                                              print(e);
-                                            }
-                                          },
-                                          items: [
-                                            DropdownMenuItem(
-                                              child: Text("Clinical"),
-                                              value: "clinical",
-                                            ),
-                                            DropdownMenuItem(
-                                              child: Text("General"),
-                                              value: "general",
-                                            ),
-                                            DropdownMenuItem(
-                                              child: Text("Training"),
-                                              value: "training",
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    if (selectedLevel != null ||
-                                        selectedType != null)
+                                    if (selectedLevel != null)
                                       IconButton(
                                         onPressed: () {
                                           setState(() {
                                             selectedLevel = null;
-                                            selectedType = null;
-                                            model.getCourses();
+                                            model.getCoursesByFacultyId(
+                                                facultyId: widget.faculty.id,
+                                                type: widget.type);
                                           });
                                         },
                                         icon: Icon(
@@ -354,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                             return CourseCard(
-                              course: model.homeCourses[index - 2],
+                              course: model.currentCourses[index - 2],
                             );
                           },
                         ),

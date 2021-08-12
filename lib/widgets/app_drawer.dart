@@ -9,6 +9,7 @@ import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/profile.dart';
 import 'package:pharma_line/screens/signup.dart';
 import 'package:pharma_line/screens/terms_and_conditions_screen.dart';
+import 'package:pharma_line/screens/training_courses.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -127,6 +128,14 @@ class AppDrawer extends StatelessWidget {
                         },
                       )
                     : Container(),
+                _listTile(
+                  context: context,
+                  title: 'Training Courses',
+                  icon: Icons.model_training,
+                  onPressed: () {
+                    _navigeteToPage(context, TrainingCourses.route);
+                  },
+                ),
                 _listTile(
                   context: context,
                   title: 'About',
