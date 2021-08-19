@@ -37,6 +37,22 @@ mixin LessonModel on ChangeNotifier {
     }
   }
 
+  Future<dynamic> reEnrollInLesson(
+      {@required String courseId, @required String lessonId}) async {
+    if (MyApp.mainModel.currentUser != null) {
+      var res = await lessonController.reEnrollInLesson(
+          token: MyApp.mainModel.currentUser.token,
+          courseId: courseId,
+          lessonId: lessonId);
+      print(res);
+      if (res['error'] == null) {
+        MyApp.mainModel.currentUser.lessonsIds.add(lessonId);
+        notifyListeners();
+      }
+      return res;
+    }
+  }
+
   Future<void> getTeacherLessons({String courseId}) async {
     loadingLessons = true;
     notifyListeners();

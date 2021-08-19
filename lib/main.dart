@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:pharma_line/config/theme.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/screens/about_screen.dart';
 import 'package:pharma_line/screens/course_students.dart';
-import 'package:pharma_line/screens/home.dart';
 import 'package:pharma_line/screens/login.dart';
 import 'package:pharma_line/screens/my_courses.dart';
 import 'package:pharma_line/screens/notifications.dart';
@@ -47,29 +45,39 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   static final MainModel mainModel = MainModel();
   static final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();
+
   @override
-  Widget build(BuildContext context) {
-    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-    mainModel.autoLogin();
-    mainModel.getUniversities();
-    if (mainModel.currentCourses != null &&
-        mainModel.currentUserType == UserType.STUDENT) {
-      mainModel.getCourses();
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    MyApp.mainModel.autoLogin();
+    MyApp.mainModel.getUniversities();
+    if (MyApp.mainModel.currentCourses != null &&
+        MyApp.mainModel.currentUserType == UserType.STUDENT) {
+      MyApp.mainModel.getCourses();
     }
-    if (mainModel.currentCourses != null &&
-        mainModel.currentUserType == UserType.STUDENT) {
+    if (MyApp.mainModel.currentCourses != null &&
+        MyApp.mainModel.currentUserType == UserType.STUDENT) {
       try {
-        mainModel.getMyCourses(token: mainModel.currentUser.token);
+        MyApp.mainModel.getMyCourses(token: MyApp.mainModel.currentUser.token);
       } catch (_) {}
     }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => mainModel,
+      create: (context) => MyApp.mainModel,
       child: MaterialApp(
-        navigatorKey: navigatorKey,
+        navigatorKey: MyApp.navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Pharma Line',
         theme: appTheme,

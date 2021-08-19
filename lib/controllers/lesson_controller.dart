@@ -111,6 +111,31 @@ class LessonController {
     }
   }
 
+  Future<dynamic> reEnrollInLesson(
+      {@required String token,
+      @required String courseId,
+      @required String lessonId}) async {
+    try {
+      var uri = Uri.parse(BASIC_URL + "/api/v1/student/reenrollLesson");
+      var response = await post(uri,
+          body: {'courseId': courseId, 'lessonId': lessonId},
+          headers: {'Authorization': token});
+      if (response.body == 'Unauthorized') {
+        return {'error': 'Unauthorized'};
+      }
+      var body = json.decode(response.body);
+      if (body['message'] != null) {
+        return {'error': body['message']};
+      }
+      if (MyApp.mainModel.currentUser != null) {
+        MyApp.mainModel.currentUser.lessonsIds.add(lessonId);
+      }
+      return body;
+    } catch (_) {
+      return {'error': 'somethin went worng'};
+    }
+  }
+
   Future<int> updateLessonProgress(
       {@required String token,
       @required String courseId,

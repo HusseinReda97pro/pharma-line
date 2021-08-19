@@ -33,17 +33,7 @@ class LessonCard extends StatelessWidget {
       } else {
         Lesson lesson = res['lesson'];
         if (lesson.count >= lesson.maxCount) {
-          Fluttertoast.showToast(
-              msg: 'You consumed ' +
-                  lesson.count.toString() +
-                  (lesson.count == 1 ? ' view' : ' views') +
-                  ' out of ${lesson.maxCount}',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Color(0xFFCCCCCC),
-              textColor: Colors.white,
-              fontSize: 16.0);
+          _handleMaxCount(context: context);
         } else {
           Navigator.push(
             context,
@@ -83,24 +73,25 @@ class LessonCard extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  if (!(error == 'Not enough balance.' ||
-                      error == "You've Reached The Maximum Watching Number" ||
-                      error == 'You Should Enroll The Course First')) {
-                    _handelEnrollment(context: context);
-                  } else {
+                  if (error == 'Not enough balance.' ||
+                      error == 'You Should Enroll The Course First') {
                     Navigator.pop(context);
                     if (error == 'You Should Enroll The Course First') {
                       Navigator.pop(context);
                     }
+                  } else if (error.contains("Maximum")) {
+                    _handleMaxCount(context: context);
+                  } else {
+                    _handelEnrollment(context: context, isReEnroll: false);
                   }
                 },
                 child: Text(
                   (error == 'Not enough balance.' ||
-                          error ==
-                              "You've Reached The Maximum Watching Number" ||
                           error == 'You Should Enroll The Course First')
                       ? 'okay'
-                      : 'Enroll Now',
+                      : error.contains("Maximum")
+                          ? 'ReEnroll'
+                          : 'Enroll Now',
                   textAlign: TextAlign.center,
                 ))
           ],
@@ -109,13 +100,63 @@ class LessonCard extends StatelessWidget {
     );
   }
 
-  _handelEnrollment({@required BuildContext context}) {
+  _handleMaxCount({@required BuildContext context}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0.0,
+            title: Container(child: new Text("Max Count")),
+            content: Container(
+              height: 80,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                        "You've reached max count watching lesson: " +
+                            lesson.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('cancel'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  _handelEnrollment(context: context, isReEnroll: true);
+                },
+                child: Text('ReEnroll'),
+              ),
+            ],
+          );
+        });
+  }
+
+  _handelEnrollment(
+      {@required BuildContext context, @required bool isReEnroll}) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 0.0,
-            title: Container(child: new Text('Enrollment')),
+            title: Container(
+                child: new Text(isReEnroll ? 'ReEnrollment' : 'Enrollment')),
             content: Container(
               height: 80,
               child: Column(
@@ -126,7 +167,7 @@ class LessonCard extends StatelessWidget {
                       child: Text(
                         "Do you want to sepnd " +
                             lesson.price.toString() +
-                            " EGP for Enrollong in lesson: " +
+                            " EGP for ${isReEnroll ? 'ReEnrolling' : 'Enrolling'} in lesson: " +
                             lesson.title,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -150,8 +191,11 @@ class LessonCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(primary: Palette.darkBlue),
                 onPressed: () async {
                   loadingBox(context);
-                  var res = await MyApp.mainModel
-                      .enrollInLesson(courseId: courseId, lessonId: lesson.id);
+                  var res = await (isReEnroll
+                      ? MyApp.mainModel.reEnrollInLesson(
+                          courseId: courseId, lessonId: lesson.id)
+                      : MyApp.mainModel.enrollInLesson(
+                          courseId: courseId, lessonId: lesson.id));
                   Navigator.pop(context);
                   if (res['error'] != null) {
                     _showErrors(context, res['error']);
@@ -159,7 +203,7 @@ class LessonCard extends StatelessWidget {
                     _enrollmentMessage(context: context);
                   }
                 },
-                child: Text('Enroll'),
+                child: Text(isReEnroll ? 'ReEnroll' : 'Enroll'),
               ),
             ],
           );

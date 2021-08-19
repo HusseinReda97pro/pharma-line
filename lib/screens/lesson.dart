@@ -80,7 +80,7 @@ class _LessonScreenState extends State<LessonScreen> {
         child: Text(
           MyApp.mainModel.currentUser.email,
           style: TextStyle(
-              color: Palette.darkBlue.withAlpha(160),
+              color: Palette.darkBlue.withAlpha(60),
               fontSize: 40,
               fontWeight: FontWeight.bold),
         ),
@@ -111,15 +111,14 @@ class _LessonScreenState extends State<LessonScreen> {
         .contains(_videoPlayerController.value.position.inSeconds)) {
       watchedSeconds.add(_videoPlayerController.value.position.inSeconds);
     }
-    if (watchedSeconds.length >= 10) {
+    if (watchedSeconds.length >=
+        _videoPlayerController.value.duration.inSeconds * 0.25) {
       if (!isWatched) {
         isWatched = true;
         count = await LessonController().updateLessonProgress(
             token: MyApp.mainModel.currentUser.token,
             courseId: widget.courseId,
             lessonId: widget.lesson.id);
-
-        watchedSeconds.clear();
         setState(() {});
         showCountMessage(count: count);
         if (widget.lesson.maxCount <= count) {

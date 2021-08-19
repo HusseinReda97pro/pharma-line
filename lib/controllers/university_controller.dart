@@ -9,7 +9,9 @@ class UniversityController {
   Future<List<University>> getUniversities() async {
     List<University> universities = [];
     Uri url = Uri.parse(BASIC_URL + '/api/v1/universities');
+    print("getting Universities");
     http.Response response = await http.get(url);
+    print("Got Universities");
     var data = json.decode(response.body);
     print(data);
     try {
