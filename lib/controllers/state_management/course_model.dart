@@ -44,7 +44,7 @@ mixin CourseModel on ChangeNotifier {
     loadingCourses = true;
     notifyListeners();
     currentCourses = await courseController.getCoursesByFacultyId(
-        facultyId: facultyId, type: type?.toLowerCase(), level: level);
+        facultyId: facultyId, type: type, level: level);
     loadingCourses = false;
     notifyListeners();
   }

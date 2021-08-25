@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pharma_line/config/Palette.dart';
 import 'package:pharma_line/controllers/state_management/main_model.dart';
 import 'package:pharma_line/models/faculty.dart';
+import 'package:pharma_line/models/type.dart';
 import 'package:pharma_line/models/user_type.dart';
 import 'package:pharma_line/widgets/app_bar.dart';
 import 'package:pharma_line/widgets/app_drawer.dart';
@@ -9,7 +10,7 @@ import 'package:pharma_line/widgets/course_card.dart';
 import 'package:provider/provider.dart';
 
 class FacultyAndTypeCourses extends StatefulWidget {
-  final String type;
+  final TypeModel type;
   final Faculty faculty;
   FacultyAndTypeCourses({this.faculty, this.type});
 
@@ -77,7 +78,7 @@ class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
                                             model.getCoursesByFacultyId(
                                                 facultyId: widget.faculty.id,
                                                 level: selectedLevel,
-                                                type: widget.type);
+                                                type: widget.type.name);
                                           } catch (e) {
                                             print(e);
                                           }
@@ -114,7 +115,7 @@ class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
                                           selectedLevel = null;
                                           model.getCoursesByFacultyId(
                                               facultyId: widget.faculty.id,
-                                              type: widget.type);
+                                              type: widget.type.name);
                                         });
                                       },
                                       icon: Icon(
@@ -137,7 +138,8 @@ class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
                         onRefresh: () async {
                           selectedLevel = null;
                           await model.getCoursesByFacultyId(
-                              facultyId: widget.faculty.id, type: widget.type);
+                              facultyId: widget.faculty.id,
+                              type: widget.type.name);
                         },
                         child: ListView.builder(
                           physics: BouncingScrollPhysics(),
@@ -216,7 +218,7 @@ class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
                                               model.getCoursesByFacultyId(
                                                   facultyId: widget.faculty.id,
                                                   level: selectedLevel,
-                                                  type: widget.type);
+                                                  type: widget.type.name);
                                             } catch (e) {
                                               print(e);
                                             }
@@ -253,7 +255,7 @@ class _FacultyAndTypeCoursesState extends State<FacultyAndTypeCourses> {
                                             selectedLevel = null;
                                             model.getCoursesByFacultyId(
                                                 facultyId: widget.faculty.id,
-                                                type: widget.type);
+                                                type: widget.type.name);
                                           });
                                         },
                                         icon: Icon(

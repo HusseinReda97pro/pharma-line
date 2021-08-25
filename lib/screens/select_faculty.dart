@@ -56,8 +56,8 @@ class SelectFaculty extends StatelessWidget {
                               type:
                                   university.faculties[index - 1].types.isEmpty
                                       ? null
-                                      : university
-                                          .faculties[index - 1].types.first);
+                                      : university.faculties[index - 1].types
+                                          .first.name);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

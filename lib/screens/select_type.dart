@@ -38,7 +38,7 @@ class SelectType extends StatelessWidget {
             return InkWell(
               onTap: () {
                 model.getCoursesByFacultyId(
-                    facultyId: faculty.id, type: faculty.types[index - 1]);
+                    facultyId: faculty.id, type: faculty.types[index - 1].name);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -50,7 +50,7 @@ class SelectType extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(16.0),
                 margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-                child: Text(faculty.types[index - 1]),
+                child: Text(faculty.types[index - 1].name),
                 decoration: BoxDecoration(
                     color: Palette.lightBlue,
                     borderRadius: BorderRadius.circular(12.0)),
