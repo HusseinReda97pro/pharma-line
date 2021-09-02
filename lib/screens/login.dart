@@ -125,47 +125,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 5.0,
                   ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Student',
-                        style:
-                            TextStyle(fontSize: 16, color: Palette.lightBlue),
-                      ),
-                      Radio(
-                        value:
-                            model.currentUserType == UserType.STUDENT ? 1 : 0,
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Palette.lightBlue),
-                        groupValue: _radioGroup,
-                        onChanged: (_) {
-                          setState(() {
-                            model.currentUserType = UserType.STUDENT;
-                          });
-                        },
-                      ),
-                      Radio(
-                        value:
-                            model.currentUserType == UserType.TEACHER ? 1 : 0,
-                        activeColor: Palette.lightBlue,
-                        hoverColor: Colors.red,
-                        groupValue: _radioGroup,
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Palette.lightBlue),
-                        onChanged: (_) {
-                          setState(() {
-                            model.currentUserType = UserType.TEACHER;
-                          });
-                        },
-                      ),
-                      Text(
-                        'Teachr',
-                        style:
-                            TextStyle(fontSize: 16, color: Palette.lightBlue),
-                      ),
-                    ],
-                  ),
+                  // ButtonBar(
+                  //   alignment: MainAxisAlignment.center,
+                  //   children: <Widget>[
+                  //     Text(
+                  //       'Student',
+                  //       style:
+                  //           TextStyle(fontSize: 16, color: Palette.lightBlue),
+                  //     ),
+                  //     Radio(
+                  //       value:
+                  //           model.currentUserType == UserType.STUDENT ? 1 : 0,
+                  //       fillColor: MaterialStateColor.resolveWith(
+                  //           (states) => Palette.lightBlue),
+                  //       groupValue: _radioGroup,
+                  //       onChanged: (_) {
+                  //         setState(() {
+                  //           model.currentUserType = UserType.STUDENT;
+                  //         });
+                  //       },
+                  //     ),
+                  //     Radio(
+                  //       value:
+                  //           model.currentUserType == UserType.TEACHER ? 1 : 0,
+                  //       activeColor: Palette.lightBlue,
+                  //       hoverColor: Colors.red,
+                  //       groupValue: _radioGroup,
+                  //       fillColor: MaterialStateColor.resolveWith(
+                  //           (states) => Palette.lightBlue),
+                  //       onChanged: (_) {
+                  //         setState(() {
+                  //           model.currentUserType = UserType.TEACHER;
+                  //         });
+                  //       },
+                  //     ),
+                  //     Text(
+                  //       'Teachr',
+                  //       style:
+                  //           TextStyle(fontSize: 16, color: Palette.lightBlue),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(
                     height: 5.0,
                   ),
